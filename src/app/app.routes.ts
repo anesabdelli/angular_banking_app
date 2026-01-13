@@ -1,3 +1,9 @@
-import { Routes } from '@angular/router';
+import { Routes, RouterModule } from '@angular/router';
 
-export const routes: Routes = [];
+import { Home } from '../features/home/home';
+import { Register } from '../features/register/register';
+
+export const routes: Routes = [
+  { path: '', component: Home },
+  { path: 'register', component: Register },
+];
