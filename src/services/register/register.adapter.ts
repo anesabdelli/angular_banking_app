@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable, map } from 'rxjs';
 import { RegisterUser, User } from './register.interface';
-import { RegisterApiService, RegisterDTO } from './register.service';
+import RegisterApiService, { RegisterDTO } from './register.provider';
 
 @Injectable({
   providedIn: 'root'

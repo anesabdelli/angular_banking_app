@@ -10,7 +10,7 @@ export interface RegisterDTO {
 @Injectable({
   providedIn: 'root'
 })
-export class RegisterApiService {
+export default class RegisterApiService {
   private apiUrl = 'https://coding-bank.fly.dev/auth/register';
 
   constructor(private http: HttpClient) {}
