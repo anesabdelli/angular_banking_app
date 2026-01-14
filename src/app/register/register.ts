@@ -4,6 +4,7 @@ import {ReactiveFormsModule} from '@angular/forms';
 import { Router } from '@angular/router';
 import { RegisterService } from '../../services/register/register.service';
 
+
 @Component({
   selector: 'app-register',
   imports: [ReactiveFormsModule],
@@ -21,10 +22,14 @@ import { RegisterService } from '../../services/register/register.service';
 })
 
 export class Register {
-form1 = new FormGroup({
-  name: new FormControl('', { nonNullable: true }),
-  password: new FormControl('', { nonNullable: true })
-});
+  form1 = new FormGroup<{
+    name: FormControl<string>;
+    password: FormControl<string>;
+  }>({
+    name: new FormControl('', { nonNullable: true, validators: Validators.required }),
+    password: new FormControl('', { nonNullable: true, validators: Validators.required })
+  });
+
   constructor(
     private registerService: RegisterService,
     private router: Router
@@ -33,7 +38,7 @@ form1 = new FormGroup({
   onSubmit() {
   if (this.form1.invalid) return;
 
-  const data = this.form1.getRawValue();
+  const data= this.form1.getRawValue();
   this.registerService.register(data).subscribe
   ({
     next: (res) => {

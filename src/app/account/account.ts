@@ -2,9 +2,11 @@ import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { Account } from '../../services/account/account.interface';
-import { User } from '../../services/user/user.interface';
 import { AccountService } from '../../services/account/account.service';
 import { UserService } from '../../services/user/user.service';
+import { User } from '../../services/user/user.interface';
+
+
 
 @Component({
   selector: 'app-account',
@@ -67,8 +69,8 @@ export class AccountComponent implements OnInit {
 
         this.loading.set(false);
       },
-      error: (err) => {
-        console.error(err);
+      error: (error) => {
+        console.error(error);
         this.error.set('Impossible de récupérer les comptes.');
         this.loading.set(false);
       }
@@ -77,8 +79,8 @@ export class AccountComponent implements OnInit {
 
   // Boutons
   onInfosClick(): void {
-    alert(this.account() 
-      ? `Compte ID : ${this.account()!.accountId}\nSolde : ${this.account()!.balance} €` 
+    alert(this.account()
+      ? `Compte ID : ${this.account()!.accountId}\nSolde : ${this.account()!.balance} €`
       : 'Aucun compte sélectionné');
   }
 
