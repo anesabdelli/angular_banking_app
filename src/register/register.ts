@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
 import {FormControl, FormGroup, FormsModule, Validators} from '@angular/forms';
 import {ReactiveFormsModule} from '@angular/forms';
-
+import { RegisterProvider } from '../services/register/register.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-register',
@@ -17,14 +18,35 @@ import {ReactiveFormsModule} from '@angular/forms';
     <button type="submit">submit</button>
   </form>
   `
-  })
+})
+
 export class Register {
 form1 = new FormGroup({
-  name: new FormControl('', Validators.required),
-  password: new FormControl('', Validators.required)
+  name: new FormControl('', { nonNullable: true }),
+  password: new FormControl('', { nonNullable: true })
 });
+  constructor(
+    private registerProvider: RegisterProvider,
+    private router: Router
+  ) {}
 
   onSubmit() {
-  console.log(this.form1);
+  if (this.form1.invalid) return;
+
+  const data = this.form1.getRawValue();
+  this.registerProvider.register(data).subscribe
+  ({
+    next: (res) => {
+      console.log("Register successfully", res);
+
+      setTimeout(() => {
+        this.router.navigate(['/'])
+        // this.router.navigate(['login'])
+      }, 4000);
+    },
+    error: (err) => {
+      console.log("Register error", err);
+    }
+  });
   }
 }
