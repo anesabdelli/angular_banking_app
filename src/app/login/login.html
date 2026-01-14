@@ -1,0 +1,50 @@
+<form (submit)="onSubmit($event)">
+
+  <!-- Code Client -->
+  <div>
+    <label>
+      Code Client
+      <input type="text" [field]="loginForm.codeClient" aria-invalid="{{ loginForm.codeClient().invalid() }}" />
+    </label>
+
+    @if (loginForm.codeClient().invalid() && loginForm.codeClient().touched()) {
+      <div class="error">
+        @for (error of loginForm.codeClient().errors(); track error.kind) {
+          <span>{{ error.message }}</span>
+        }
+      </div>
+    }
+  </div>
+
+  <!-- Password -->
+  <div>
+    <label>
+      Mot de passe
+      <input type="password" [field]="loginForm.password" aria-invalid="{{ loginForm.password().invalid() }}" />
+    </label>
+
+    @if (loginForm.password().invalid() && loginForm.password().touched()) {
+      <div class="error">
+        @for (error of loginForm.password().errors(); track error.kind) {
+          <span>{{ error.message }}</span>
+        }
+      </div>
+    }
+  </div>
+
+  <!-- Erreur backend -->
+  @if (loginError()) {
+    <p class="error">{{ loginError() }}</p>
+  }
+
+  <!-- Bouton submit -->
+  <button type="submit" [disabled]="loginForm().invalid() || isLoading()">
+    {{ isLoading() ? 'Connexion...' : 'Log in' }}
+  </button>
+
+  <!-- Message de succès -->
+  @if (loginSuccess()) {
+    <p class="success">Connexion réussie !</p>
+  }
+
+</form>
