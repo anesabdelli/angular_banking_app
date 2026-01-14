@@ -1,22 +1,13 @@
-import { Injectable } from '@angular/core';
-import { Observable, map } from 'rxjs';
-import { RegisterUser, User } from './register.interface';
-import RegisterApiService, { RegisterDTO } from './register.provider';
+import { Observable } from "rxjs";
+import { RegisterUser, User } from "./register.interface";
+import { HttpClient } from "@angular/common/http";
 
-@Injectable({
-  providedIn: 'root'
-})
-export class RegisterAdapterService implements RegisterUser {
-  constructor(private apiService: RegisterApiService) {}
+export class RegisterAdapter implements RegisterUser {
+  private readonly apiUrl = 'https://coding-bank.fly.dev/auth/register';
+
+  constructor(private http: HttpClient) {}
 
   register(user: User): Observable<User> {
-    const dto: User = { name: user.name, password: user.password };
-
-    return this.apiService.registerApi(dto).pipe(
-      map((res: User) => ({
-        name: res.name,
-        password: res.password
-      }))
-    );
+    return this.http.post<User>(this.apiUrl, user);
   }
 }
