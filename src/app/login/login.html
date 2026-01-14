@@ -1,0 +1,42 @@
+<!-- TODO: Add (submit)="onSubmit($event)" to form -->
+<form (submit)="onSubmit($event)" >
+  <div>
+    <label>
+      Code Client
+      <input type="text" [field]="loginForm.codeClient" />
+    </label>
+    @if (loginForm.codeClient().invalid() && loginForm.codeClient().touched()) {
+      <div class="error">
+        @for (error of loginForm.codeClient().errors(); track error.kind) {
+          <span>{{ error.message }}</span>
+        }
+      </div>
+    }
+  </div>
+
+  <div>
+    <label>
+      Password
+      <input type="password" [field]="loginForm.password" />
+    </label>
+    @if (loginForm.password().invalid() && loginForm.password().touched()) {
+      <div class="error">
+        @for (error of loginForm.password().errors(); track error.kind) {
+          <span>{{ error.message }}</span>
+        }
+      </div>
+    }
+  </div>
+
+  <!-- TODO: Add [disabled]="loginForm().invalid()" to button -->
+  <button type="submit" [disabled]="loginForm().invalid()">
+    Log in
+  </button>
+
+  @if (loginSuccess()) {
+    <p class="success">Connexion réussie !</p>
+  }
+
+</form>
+
+
