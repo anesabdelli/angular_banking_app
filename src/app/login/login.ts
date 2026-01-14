@@ -1,30 +1,24 @@
-import {Component, signal, ChangeDetectionStrategy} from '@angular/core';
-// TODO: Import submit function
-import {form, Field, required, email, submit} from '@angular/forms/signals';
+import { Component, signal, ChangeDetectionStrategy } from '@angular/core';
+import { form, Field, required, submit } from '@angular/forms/signals';
 import { LoginService } from '../services/login/loginService';
 import { LoginData } from '../services/login/Login.interface';
 import { Router } from '@angular/router';
-
-
-
 @Component({
   selector: 'app-login',
   templateUrl: './login.html',
-  styleUrl: './login.css',
+  styleUrls: ['./login.css'],
   imports: [Field],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-})
-
-
+  changeDetection: ChangeDetectionStrategy.OnPush,})
 export class LoginComponent {
 
- loginSuccess = signal(false);
+  loginSuccess = signal(false);
+  loginError = signal<string | null>(null);
+  isLoading = signal(false);
 
   constructor(
-    private loginService:LoginService,
-    private router:Router
-  ){}
-
+    private loginService: LoginService,
+    private router: Router
+  ) {}
 
   loginModel = signal<LoginData>({
     codeClient: '',
@@ -32,37 +26,47 @@ export class LoginComponent {
   });
 
   loginForm = form(this.loginModel, (fieldPath) => {
-    required(fieldPath.codeClient, {message: 'codeClient is required'});
-    required(fieldPath.password, {message: 'Password is required'});
+    required(fieldPath.codeClient, { message: 'Code client requis' });
+    required(fieldPath.password, { message: 'Mot de passe requis' });
   });
 
-
-  // TODO: Add onSubmit method
-  onSubmit(event:Event){
+  onSubmit(event: Event) {
     event.preventDefault();
 
-    submit(this.loginForm, async()=>{
+
+    this.loginError.set(null);
+    this.isLoading.set(true);
+
+    submit(this.loginForm, async () => {
+      if (this.loginForm.codeClient().errors().length > 0) {
+        this.isLoading.set(false);
+        return;
+      }
+
       const loginData = this.loginModel();
 
       try {
-        const user = {
+        const result = await this.loginService.loginUser({
           codeClient: loginData.codeClient,
-          password: loginData.password
-        }
-        const result = await this.loginService.loginUser(user);
+          password: loginData.password,
+        });
 
-        localStorage.setItem('token', result.token);
+        localStorage.setItem('user', JSON.stringify({
+          name: result.name,
+          clientCode: result.clientCode
+        }));
         
-        this.loginSuccess.set(true)
+        this.loginSuccess.set(true);
 
-        setTimeout(()=>{
+        setTimeout(() => {
           this.router.navigate(['/homepage']);
         }, 1000);
-
       } catch (error) {
+        this.loginError.set('Code client ou mot de passe incorrect');
         console.error('Login failed', error);
+      } finally {
+        this.isLoading.set(false);
       }
-    })
-  }
-
+    });
+ }
 }
