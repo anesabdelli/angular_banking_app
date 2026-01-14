@@ -3,6 +3,7 @@ import { form, Field, required, submit } from '@angular/forms/signals';
 import { Router } from '@angular/router';
 import { LoginData } from '../../../services/login/Login.interface';
 import { LoginService } from '../../../services/login/login.service';
+
 @Component({
   selector: 'app-login',
   templateUrl: './login.html',
@@ -61,7 +62,7 @@ export class LoginComponent {
         this.loginSuccess.set(true);
 
         setTimeout(() => {
-          this.router.navigate(['/homepage']);
+          this.router.navigate(['/']);
         }, 1000);
       } catch (error) {
         this.loginError.set('Code client ou mot de passe incorrect');

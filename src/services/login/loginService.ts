@@ -1,6 +1,7 @@
 import { Injectable } from "@angular/core";
-import { LoginData} from "./Login.interface";
+import { LoginData, LoginInterface } from "./Login.interface";
 import { LoginAdapter } from "./login.adapter";
+
 
 @Injectable({ providedIn: 'root' })
 export class LoginService {
