@@ -1,0 +1,82 @@
+<form (submit)="onSubmit($event)">
+
+  <!-- emitterAccountId -->
+  <div>
+    <label>
+      Emitter Account ID
+      <input type="text" [field]="transactionForm.emitterAccountId" />
+    </label>
+
+    @if (transactionForm.emitterAccountId().errors().length > 0
+        && transactionForm.emitterAccountId().touched()) {
+      <div class="error">
+        @for (error of transactionForm.emitterAccountId().errors(); track error.kind) {
+          <span>{{ error.message }}</span>
+        }
+      </div>
+    }
+  </div>
+
+  <!-- receiverAccountId -->
+  <div>
+    <label>
+      Receiver Account ID
+      <input type="text" [field]="transactionForm.receiverAccountId" />
+    </label>
+
+    @if (transactionForm.receiverAccountId().errors().length > 0
+        && transactionForm.receiverAccountId().touched()) {
+      <div class="error">
+        @for (error of transactionForm.receiverAccountId().errors(); track error.kind) {
+          <span>{{ error.message }}</span>
+        }
+      </div>
+    }
+
+  </div>
+
+  <!-- amount -->
+  <div>
+    <label>
+      Amount
+      <input type="number" [field]="transactionForm.amount" />
+    </label>
+
+    @if (transactionForm.amount().errors().length > 0
+        && transactionForm.amount().touched()) {
+      <div class="error">
+        @for (error of transactionForm.amount().errors(); track error.kind) {
+          <span>{{ error.message }}</span>
+        }
+      </div>
+    }
+  </div>
+
+  <!-- description -->
+  <div>
+    <label>
+      Description
+      <input type="text" [field]="transactionForm.description" />
+    </label>
+
+    @if (transactionForm.description().errors().length > 0
+        && transactionForm.description().touched()) {
+      <div class="error">
+        @for (error of transactionForm.description().errors(); track error.kind) {
+          <span>{{ error.message }}</span>
+        }
+      </div>
+    }
+  </div>
+
+  <!-- Erreur backend -->
+  @if (transactionError()) {
+    <p class="error">{{ transactionError() }}</p>
+  }
+
+  <!-- Bouton submit -->
+  <button type="submit" [disabled]="transactionForm().errors().length > 0 || isLoading()">
+    {{ isLoading() ? 'Virement...' : 'Émettre le virement' }}
+  </button>
+
+</form>

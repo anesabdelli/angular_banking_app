@@ -1,6 +1,6 @@
 import { Injectable, ResponseInit } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
-import { firstValueFrom, Observable } from "rxjs";
+import { firstValueFrom} from "rxjs";
 import { LoginData, LoginInterface, ResponseLogin } from "./Login.interface";
 
 @Injectable({ providedIn: 'root' })
