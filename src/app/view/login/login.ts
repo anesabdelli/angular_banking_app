@@ -52,12 +52,16 @@ export class LoginComponent {
           password: loginData.password,
         });
 
-        const user = {
-          name: result.name,
-          clientCode: result.clientCode
-        }
 
-        localStorage.setItem('user', JSON.stringify(user));
+        localStorage.setItem('jwt', result.jwt);
+
+        localStorage.setItem(
+          'user',
+          JSON.stringify(
+            result.user.name,
+            result.user.clientCode)
+        );
+
 
         this.loginSuccess.set(true);
 

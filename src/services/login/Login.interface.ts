@@ -6,7 +6,7 @@ export interface LoginData {
 export interface ResponseLogin {
   clientCode: string;
   name: string;
-  token: string;
+  jwt: string;
 }
 export interface LoginInterface{
   loginUser(loginData: LoginData): Promise<any>

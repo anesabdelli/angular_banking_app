@@ -2,8 +2,8 @@
 import { Routes} from '@angular/router';
 import { LoginComponent } from './view/login/login';
 import { Transaction } from './view/transaction/transaction';
-import { AccountComponent } from './account/account';
-import { Register } from './register/register';
+import { AccountComponent } from './view/account/account';
+import { Register } from './view/register/register';
 
 
 export const routes: Routes = [
