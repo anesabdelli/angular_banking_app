@@ -1,8 +1,8 @@
 import { Component, signal, ChangeDetectionStrategy } from '@angular/core';
 import { form, Field, required, submit } from '@angular/forms/signals';
-import { LoginService } from '../services/login/loginService';
-import { LoginData } from '../services/login/Login.interface';
 import { Router } from '@angular/router';
+import { LoginService } from '../../services/login/loginService';
+import { LoginData } from '../../services/login/Login.interface';
 @Component({
   selector: 'app-login',
   templateUrl: './login.html',
@@ -59,7 +59,7 @@ export class LoginComponent {
         this.loginSuccess.set(true);
 
         setTimeout(() => {
-          this.router.navigate(['/homepage']);
+          this.router.navigate(['/']);
         }, 1000);
       } catch (error) {
         this.loginError.set('Code client ou mot de passe incorrect');

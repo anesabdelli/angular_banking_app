@@ -7,10 +7,10 @@ import { Observable } from "rxjs";
 @Injectable({
   providedIn: 'root'
 })
-export class RegisterProvider{
+export class RegisterService {
   constructor(private adapter: RegisterAdapter) {}
 
-  register(user: User): Observable<User> {
+  register(user: User): Observable<any> {
     return this.adapter.register(user);
   }
 }

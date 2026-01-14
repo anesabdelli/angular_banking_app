@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
 import {FormControl, FormGroup, FormsModule, Validators} from '@angular/forms';
 import {ReactiveFormsModule} from '@angular/forms';
-import { RegisterProvider } from '../services/register/register.service';
 import { Router } from '@angular/router';
+import { RegisterService } from '../../services/register/register.service';
 
 @Component({
   selector: 'app-register',
@@ -26,7 +26,7 @@ form1 = new FormGroup({
   password: new FormControl('', { nonNullable: true })
 });
   constructor(
-    private registerProvider: RegisterProvider,
+    private registerService: RegisterService,
     private router: Router
   ) {}
 
@@ -34,13 +34,14 @@ form1 = new FormGroup({
   if (this.form1.invalid) return;
 
   const data = this.form1.getRawValue();
-  this.registerProvider.register(data).subscribe
+  this.registerService.register(data).subscribe
   ({
     next: (res) => {
       console.log("Register successfully", res);
+      console.log("Votre Code Client est : ", res.clientCode);
 
       setTimeout(() => {
-        this.router.navigate(['/'])
+        this.router.navigate(['login'])
         // this.router.navigate(['login'])
       }, 4000);
     },
