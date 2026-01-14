@@ -1,10 +1,10 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { Account } from '../../services/account/account.interface';
-import { AccountService } from '../../services/account/account.service';
-import { UserService } from '../../services/user/user.service';
-import { User } from '../../services/user/user.interface';
+import { Account } from '../../../services/account/account.interface';
+import { AccountService } from '../../../services/account/account.service';
+import { UserService } from '../../../services/user/user.service';
+import { User } from '../../../services/user/user.interface';
 
 
 
@@ -30,19 +30,6 @@ export class AccountComponent implements OnInit {
   ngOnInit(): void {
     this.loadUserAndAccounts();
 
-    // // _______________ delete me _______________ //
-
-    // // 🔹 HARD TEST / MOCK
-    // const mockUser: User = { name: 'Test User', clientCode: '12345' };
-    // const mockAccounts: Account[] = [
-    //   { accountId: 'acc-001', label: 'Checking account', balance: 250, createdAt: '2026-01-14' },
-    //   { accountId: 'acc-002', label: 'Savings account', balance: 1000, createdAt: '2025-12-01' }
-    // ];
-
-    // // Signaux pour test rapide
-    // this.user = mockUser;
-    // this.accounts.set(mockAccounts);
-    // this.account.set(mockAccounts[0]);
   }
 
   private loadUserAndAccounts(): void {

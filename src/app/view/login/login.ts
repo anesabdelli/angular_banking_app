@@ -53,9 +53,11 @@ export class LoginComponent {
         });
 
         const user = {
-          name: result.name,
-          clientCode: result.clientCode
+          name: result.user.name,
+          clientCode: result.user.clientCode
         }
+
+        localStorage.setItem('jwt', result.jwt)
 
         localStorage.setItem('user', JSON.stringify(user));
 

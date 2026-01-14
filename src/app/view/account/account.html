@@ -14,13 +14,13 @@
   <div>
     <!-- Vérifie que ce n'est pas loading et qu'on a des comptes -->
     <div *ngIf="!loading() && accounts().length > 0; else noAccounts">
-      
+
       <!-- Dropdown pour choisir le compte -->
       <div>
         <label for="accountSelect">Choisir un compte:</label>
         <select id="accountSelect" (change)="onAccountChange($event)">
-          <option 
-            *ngFor="let acc of accounts()" 
+          <option
+            *ngFor="let acc of accounts()"
             [value]="acc.accountId"
             [selected]="account() && account()!.accountId === acc.accountId">
             {{ acc.label || acc.accountId }} — {{ acc.balance | currency:'EUR' }}

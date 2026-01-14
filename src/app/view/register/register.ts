@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import {FormControl, FormGroup, FormsModule, Validators} from '@angular/forms';
 import {ReactiveFormsModule} from '@angular/forms';
 import { Router } from '@angular/router';
-import { RegisterService } from '../../services/register/register.service';
+import { RegisterService } from '../../../services/register/register.service';
 
 
 @Component({
