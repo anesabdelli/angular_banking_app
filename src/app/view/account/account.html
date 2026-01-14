@@ -30,7 +30,7 @@
 
       <!-- Infos du compte sélectionné -->
       <section class="account-details">
-        <h3>{{ account() ? (account()!.label || 'Compte') + ' (' + account()!.accountId + ')' : '' }}</h3>
+        <h3>{{ account() ? (account()!.label || 'Compte') : '' }}</h3>
         <p><strong>Solde:</strong> {{ account() ? (account()!.balance | currency:'EUR') : '' }}</p>
         <p><strong>Ouvert le:</strong> {{ account() ? (account()!.createdAt | date:'dd/MM/yyyy') : '' }}</p>
 
