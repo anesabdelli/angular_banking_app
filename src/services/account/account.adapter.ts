@@ -1,5 +1,5 @@
 import { HttpClient } from "@angular/common/http";
-import { Account, AccountRepository } from "./account.interface";
+import { Account, AccountRepository, CreateAccountDTO } from "./account.interface";
 import { Observable } from "rxjs";
 import { Injectable } from "@angular/core";
 
@@ -14,8 +14,11 @@ export class AccountAdapter implements AccountRepository {
     }
 
     getAccounts(): Observable<Account[]> {
-    const token = localStorage.getItem('jwt') || '';
-    return this.http.get<Account[]>(this.apiUrl);
-  }
+      return this.http.get<Account[]>(this.apiUrl);
+    }
+
+    createAccount(data: CreateAccountDTO): Observable<Account> {
+      return this.http.post<Account>(this.apiUrl, data);
+    }
 }
 
