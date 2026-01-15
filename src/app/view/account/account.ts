@@ -2,7 +2,7 @@ import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { Account } from '../../../services/account/account.interface';
-import { FormsModule } from '@angular/forms'; 
+import { FormsModule } from '@angular/forms';
 import { AccountService } from '../../../services/account/account.service';
 import { UserService } from '../../../services/user/user.service';
 import { User } from '../../../services/user/user.interface';
@@ -133,18 +133,14 @@ export class AccountComponent implements OnInit {
 
   onSendClick(): void {
     this.router.navigate(['/transaction'],{
-      queryParams: {emitterAccountId: this.account()!.accountId}
+      queryParams: {emitterAccountId: this.account()!.id}
     })
   }
-  onOpenClick(): void { alert('Ouvrir nouveau compte (non implémenté)'); }
+
   onViewAllClick(): void { alert('Voir tous les comptes (non implémenté)'); }
 
   onOpenClick(): void {
     this.openCreateForm();
-  }
-
-  onViewAllClick(): void {
-    alert('Voir tous les comptes (non implémenté)');
   }
 
   onAccountChange(event: Event): void {
