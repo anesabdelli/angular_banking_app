@@ -67,6 +67,8 @@ export class TransactionComponent implements OnInit {
 
         this.transactionResult.set(response);
 
+        localStorage.setItem('send', JSON.stringify(response));
+
       } catch (error: any) {
         this.transactionError.set(error?.message ?? 'Transaction failed');
         console.error('[TransactionComponent] erreur', error);

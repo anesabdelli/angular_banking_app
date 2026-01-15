@@ -73,7 +73,6 @@ export class AccountComponent implements OnInit {
       ? `Compte ID : ${this.account()!.accountId}\nSolde : ${this.account()!.balance} €`
       : 'Aucun compte sélectionné');
 
-
   }
 
   onSendClick(): void {
