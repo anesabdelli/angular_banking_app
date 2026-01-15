@@ -1,6 +1,6 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { Account } from '../../../services/account/account.interface';
 
 import { AccountService } from '../../../services/account/account.service';
@@ -26,7 +26,8 @@ export class AccountComponent implements OnInit {
 
   constructor(
     private accountService: AccountService,
-    private userService: UserService
+    private userService: UserService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -71,9 +72,15 @@ export class AccountComponent implements OnInit {
     alert(this.account()
       ? `Compte ID : ${this.account()!.accountId}\nSolde : ${this.account()!.balance} €`
       : 'Aucun compte sélectionné');
+
+
   }
 
-  onSendClick(): void { alert('Envoyer argent (non implémenté)'); }
+  onSendClick(): void {
+    this.router.navigate(['/transaction'],{
+      queryParams: {emitterAccountId: this.account()!.accountId}
+    })
+  }
   onOpenClick(): void { alert('Ouvrir nouveau compte (non implémenté)'); }
   onViewAllClick(): void { alert('Voir tous les comptes (non implémenté)'); }
 

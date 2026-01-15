@@ -69,6 +69,31 @@
     }
   </div>
 
+  <!---->
+
+  @if (transactionResult()) {
+  <div class="success">
+
+    <p>
+      Statut :
+      <strong>{{ transactionResult()!.status }}</strong>
+    </p>
+
+    <p>
+      Le virement de
+      <strong>{{ transactionResult()!.amount }} €</strong>
+      a bien été effectué à
+      <strong>{{ transactionResult()!.receiver.owner.name }}</strong>
+      le
+      <strong>
+        {{ transactionResult()!.emittedAt | date:'dd/MM/yyyy à HH:mm' }}
+      </strong>.
+    </p>
+
+  </div>
+}
+
+
   <!-- Erreur backend -->
   @if (transactionError()) {
     <p class="error">{{ transactionError() }}</p>
