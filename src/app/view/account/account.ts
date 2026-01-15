@@ -163,6 +163,11 @@ export class AccountComponent implements OnInit {
     }
   }
 
+
+  onViewAllClick(): void {
+     this.router.navigate(['/transactionslist'])
+   }
+
   onOpenClick(): void {
     this.openCreateForm();
   }

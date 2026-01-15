@@ -11,10 +11,7 @@ export class TransactionAdapter implements EmitTransaction{
   private  apiUrl = 'https://coding-bank.fly.dev/transactions/emit';
 
  emitTransaction(data: TransactionDto): Promise<TransactionResponse> {
-      console.log(
-      '[TransactionAdapter] payload envoyé',
-      JSON.stringify(data, null, 2)
-    );
+
     return firstValueFrom(
       this.http.post<TransactionResponse>(this.apiUrl, data)
     ).then((response) => {

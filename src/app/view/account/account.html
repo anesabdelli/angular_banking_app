@@ -33,7 +33,8 @@
         <button (click)="onInfosClick()">Infos</button>
         <button (click)="onSendClick()">Envoyer</button>
         <button (click)="onOpenClick()">Ouvrir un nouveau compte</button>
-        <button (click)="onViewAllClick()">Voir transactions</button>
+        <button (click)="onViewAllClick()">Historique transactions</button>
+
       </div>
     </section>
 
@@ -84,16 +85,45 @@
       <!-- ... le formulaire reste identique ... -->
       <div class="form-group">
         <label for="label">Nom / Libellé :</label>
-        <input id="label" type="text" placeholder="ex: Compte Courant..." [(ngModel)]="newAccount().label" />
+
+        <input
+          id="label"
+          type="text"
+          placeholder="ex: Compte Courant, Livret A, Vacances..."
+          [(ngModel)]="newAccount().label"
+        />
       </div>
       <div class="form-group">
         <label for="initialBalance">Solde initial (€) :</label>
-        <input id="initialBalance" type="number" min="0" step="0.01" [(ngModel)]="newAccount().initialBalance" />
+
+        <input
+          id="initialBalance"
+          type="number"
+          min="0"
+          step="0.01"
+          [(ngModel)]="newAccount().initialBalance"
+        />
+      </div>
+
+      <div class="error" *ngIf="createError()">
+        {{ createError() }}
+
       </div>
       <div class="error" *ngIf="createError()">{{ createError() }}</div>
       <div class="form-actions">
-        <button class="btn-create" (click)="createNewAccount()" [disabled]="createLoading()">
-          {{ createLoading() ? 'Création...' : 'Créer le compte' }}
+        <button
+          class="btn-create"
+          (click)="createNewAccount()"
+          [disabled]="createLoading()">
+          {{ createLoading() ? 'Création en cours...' : 'Créer le compte' }}
+        </button>
+
+        <button
+          class="btn-cancel"
+          (click)="closeCreateForm()"
+          [disabled]="createLoading()">
+          Annuler
+
         </button>
         <button class="btn-cancel" (click)="closeCreateForm()" [disabled]="createLoading()">Annuler</button>
       </div>
