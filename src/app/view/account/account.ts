@@ -1,9 +1,9 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms'; 
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 
-import { Account } from '../../../services/account/account.interface';
+import { Account, FullTransaction } from '../../../services/account/account.interface';
 import { AccountService } from '../../../services/account/account.service';
 import { UserService } from '../../../services/user/user.service';
 import { User } from '../../../services/user/user.interface';
@@ -16,14 +16,14 @@ import { User } from '../../../services/user/user.interface';
   styleUrls: ['./account.css']
 })
 export class AccountComponent implements OnInit {
-  account = signal<Account | null>(null);           // compte sélectionné
-  accounts = signal<Account[]>([]);                 // tous les comptes
+  account = signal<Account | null>(null);
+  accounts = signal<Account[]>([]);
   user: User | null = null;
 
   loading = signal<boolean>(false);
   error = signal<string | null>(null);
 
-  // ── Nouveaux signaux pour la création ───────────────────────────────
+  // Création de compte
   showCreateForm = signal(false);
   newAccount = signal<{ label: string; initialBalance: number }>({
     label: '',
@@ -32,9 +32,15 @@ export class AccountComponent implements OnInit {
   createLoading = signal(false);
   createError = signal<string | null>(null);
 
+  // Transactions
+  transactions = signal<FullTransaction[]>([]);
+  transactionsLoading = signal<boolean>(false);
+  transactionsError = signal<string | null>(null);
+
   constructor(
     private accountService: AccountService,
-    private userService: UserService
+    private userService: UserService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -57,6 +63,7 @@ export class AccountComponent implements OnInit {
         this.accounts.set(accs);
         if (accs.length > 0) {
           this.account.set(accs[0]);
+          this.loadTransactions(); // ← on charge les tx du premier compte par défaut
         }
         this.loading.set(false);
       },
@@ -68,21 +75,43 @@ export class AccountComponent implements OnInit {
     });
   }
 
-  // ── Méthodes pour la création de compte ──────────────────────────────
-  openCreateForm(): void {
-    this.newAccount.set({ label: '', initialBalance: 0 });
-    this.createError.set(null);
-    this.showCreateForm.set(true);
+  // Chargement des transactions du compte actuellement sélectionné
+  private loadTransactions(): void {
+    const currentAccount = this.account();
+    if (!currentAccount) return;
+
+    this.transactionsLoading.set(true);
+    this.transactionsError.set(null);
+
+    this.accountService.getTransactionsByAccount(currentAccount.id).subscribe({
+      next: (txs) => {
+        this.transactions.set(txs ?? []);
+        this.transactionsLoading.set(false);
+      },
+      error: (err) => {
+        console.error('Erreur chargement transactions:', err);
+        this.transactionsError.set('Impossible de charger les transactions');
+        this.transactionsLoading.set(false);
+      }
+    });
   }
 
-  closeCreateForm(): void {
-    this.showCreateForm.set(false);
+  // Quand on change de compte → recharger les transactions
+  onAccountChange(event: Event): void {
+    const target = event.target as HTMLSelectElement;
+    const accountId = target.value;
+
+    const selected = this.accounts().find(acc => acc.id === accountId);
+    if (selected) {
+      this.account.set(selected);
+      this.loadTransactions();           // ← important
+    }
   }
 
+  // Création de compte (inchangé sauf petite amélioration)
   async createNewAccount(): Promise<void> {
     const data = this.newAccount();
 
-    // Validation simple
     if (!data.label.trim()) {
       this.createError.set("Le nom du compte est obligatoire");
       return;
@@ -96,34 +125,27 @@ export class AccountComponent implements OnInit {
     this.createError.set(null);
 
     try {
-      const created = await this.accountService.createAccount({
-        label: data.label,
-        initialBalance: data.initialBalance
-      }).toPromise();
+      const created = await this.accountService.createAccount(data).toPromise();
 
-      // Recharge complète de la liste (solution la plus sûre)
       this.accountService.getAccounts().subscribe({
         next: (updatedAccounts) => {
           this.accounts.set(updatedAccounts);
-          // Sélectionne le nouveau compte
           if (created) {
             this.account.set(created);
+            this.loadTransactions(); // ← recharge aussi les tx (vide au départ)
           }
         }
       });
 
       this.closeCreateForm();
     } catch (err: any) {
-      console.error('Erreur création compte:', err);
-      this.createError.set(
-        err?.error?.message || "Erreur lors de la création du compte"
-      );
+      this.createError.set(err?.error?.message || "Erreur lors de la création du compte");
     } finally {
       this.createLoading.set(false);
     }
   }
 
-  // Boutons existants
+  // Boutons
   onInfosClick(): void {
     alert(this.account()
       ? `Compte ID : ${this.account()!.id}\nSolde : ${this.account()!.balance} €`
@@ -131,7 +153,11 @@ export class AccountComponent implements OnInit {
   }
 
   onSendClick(): void {
-    alert('Envoyer argent (non implémenté)');
+    if (this.account()) {
+      this.router.navigate(['/transaction'], {
+        queryParams: { emitterAccountId: this.account()!.id }
+      });
+    }
   }
 
   onOpenClick(): void {
@@ -139,16 +165,21 @@ export class AccountComponent implements OnInit {
   }
 
   onViewAllClick(): void {
-    alert('Voir tous les comptes (non implémenté)');
+    this.loadTransactions();
+    // Option : scroll vers la section des transactions
+    setTimeout(() => {
+      document.querySelector('.transactions-section')?.scrollIntoView({ behavior: 'smooth' });
+    }, 100);
   }
 
-  onAccountChange(event: Event): void {
-    const target = event.target as HTMLSelectElement;
-    const accountId = target.value;
+  // Méthodes création compte (inchangées)
+  openCreateForm(): void {
+    this.newAccount.set({ label: '', initialBalance: 0 });
+    this.createError.set(null);
+    this.showCreateForm.set(true);
+  }
 
-    const selected = this.accounts().find(acc => acc.id === accountId);
-    if (selected) {
-      this.account.set(selected);
-    }
+  closeCreateForm(): void {
+    this.showCreateForm.set(false);
   }
 }

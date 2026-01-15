@@ -1,5 +1,5 @@
 import { HttpClient } from "@angular/common/http";
-import { Account, AccountRepository, CreateAccountDTO } from "./account.interface";
+import { Account, AccountRepository, CreateAccountDTO, FullTransaction } from "./account.interface";
 import { Observable } from "rxjs";
 import { Injectable } from "@angular/core";
 
@@ -19,6 +19,11 @@ export class AccountAdapter implements AccountRepository {
 
     createAccount(data: CreateAccountDTO): Observable<Account> {
       return this.http.post<Account>(this.apiUrl, data);
+    }
+
+    getTransactionsByAccount(accountId: string): Observable<FullTransaction[]> {
+        const url = `${this.apiUrl}/${accountId}/transactions`;
+        return this.http.get<FullTransaction[]>(url);
     }
 }
 
