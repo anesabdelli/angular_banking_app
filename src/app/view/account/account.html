@@ -1,5 +1,7 @@
-<!--<div class="account-root">-->
-<!--  <h2>Mon espace compte</h2>-->
+
+<div class="account-root">
+  <h2>Mon espace compte</h2>
+
 
 <!--  <div class="welcome">-->
 <!--    {{ user ? 'Bienvenue, ' + user.name : '' }}-->
@@ -209,25 +211,50 @@
         </div>
       </div>
     </div>
+<!-- SECTION TRANSACTIONS -->
+<section class="transactions-section" *ngIf="account()">
+  <h3>Historique des transactions</h3>
 
-    <!-- SECTION TRANSACTIONS -->
-    <div class="row mb-4" *ngIf="account()">
-      <div class="col-12">
-        <div class="card shadow">
-          <div class="card-body">
-            <h3 class="card-title mb-3">Historique des transactions</h3>
+  <div *ngIf="transactionsLoading()">Chargement des transactions...</div>
+  <div *ngIf="transactionsError()" class="error">{{ transactionsError() }}</div>
 
-            <div *ngIf="transactionsLoading()" class="alert alert-warning">
-              Chargement des transactions...
-            </div>
+  <div *ngIf="!transactionsLoading() && transactions().length === 0 && !transactionsError()">
+    Aucune transaction pour ce compte.
+  </div>
 
-            <div *ngIf="transactionsError()" class="alert alert-danger">
-              {{ transactionsError() }}
-            </div>
+  <table *ngIf="transactions().length > 0" class="transactions-table">
+    <thead>
+      <tr>
+        <th>Date</th>
+        <th>Description</th>
+        <th>Montant</th>
+        <th>Type</th>
+        <th>Autre partie</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let tx of transactions()">
+        <!-- Date sécurisée -->
+        <td>{{ tx.formattedDate ?? (tx.emittedAt | date:'dd/MM/yyyy HH:mm') }}</td>
 
-            <div *ngIf="!transactionsLoading() && transactions().length === 0 && !transactionsError()" class="alert alert-info">
-              Aucune transaction pour ce compte.
-            </div>
+        <!-- Description -->
+        <td>{{ tx.description || '(sans description)' }}</td>
+
+        <!-- Montant avec classes debit/credit -->
+        <td [class.debit]="(tx.displayAmount ?? 0) < 0"
+            [class.credit]="(tx.displayAmount ?? 0) > 0">
+          {{ (tx.displayAmount ?? 0) | currency:'EUR':'symbol':'1.2-2' }}
+        </td>
+
+        <!-- Type Débit/Crédit -->
+        <td>{{ (tx.displayAmount ?? 0) < 0 ? 'Débit' : 'Crédit' }}</td>
+
+        <!-- Nom de l'autre partie -->
+        <td>{{ tx.otherParty ?? '' }}</td>
+      </tr>
+    </tbody>
+  </table>
+</section>
 
             <div *ngIf="transactions().length > 0" class="table-responsive">
               <table class="table table-hover">

@@ -10,6 +10,8 @@ import { User } from '../../../services/user/user.interface';
 
 // → Ajouts pour les transactions
 import { FullTransaction } from '../../../services/account/account.interface';
+import { TransactionResponse } from '../../../services/transaction/transaction.interface';
+import { getInitials } from '../../../services/user/getInitials';
 
 @Component({
   selector: 'app-account',
@@ -79,25 +81,58 @@ export class AccountComponent implements OnInit {
   }
 
   // Chargement des transactions du compte actuellement sélectionné
-  private loadTransactions(): void {
-    const currentAccount = this.account();
-    if (!currentAccount) return;
+private loadTransactions(): void {
+  const currentAccount = this.account();
+  if (!currentAccount) return;
 
-    this.transactionsLoading.set(true);
-    this.transactionsError.set(null);
+  this.transactionsLoading.set(true);
+  this.transactionsError.set(null);
 
-    this.accountService.getTransactionsByAccount(currentAccount.id).subscribe({
-      next: (txs) => {
-        this.transactions.set(txs ?? []);
-        this.transactionsLoading.set(false);
-      },
-      error: (err) => {
-        console.error('Erreur chargement transactions:', err);
-        this.transactionsError.set('Impossible de charger les transactions');
-        this.transactionsLoading.set(false);
-      }
-    });
+  this.accountService.getTransactionsByAccount(currentAccount.id).subscribe({
+    next: (txs) => {
+    const sorted = (txs ?? [])
+      .sort((a, b) => new Date(b.emittedAt).getTime() - new Date(a.emittedAt).getTime())
+      .slice(0, 5)
+      .map(tx => ({
+        ...tx,
+        displayAmount: tx.emitter.id === currentAccount.id ? -tx.amount : tx.amount,
+        otherParty: tx.emitter.id === currentAccount.id
+          ? 'Vers ' + `${getInitials(tx.receiver.owner.name)}.`
+          : 'De ' + `${getInitials(tx.receiver.owner.name)}.`,
+      }));
+
+  this.transactions.set(sorted);
+      this.transactionsLoading.set(false);
+    },
+
+    error: (err) => {
+      console.error('Erreur chargement transactions:', err);
+      this.transactionsError.set('Impossible de charger les transactions');
+      this.transactionsLoading.set(false);
+    }
+  });
+}
+
+
+    // Récupère l'autre partie de la transaction (émetteur ou receveur)
+  getOtherParty(tx: FullTransaction): string {
+    const currentAccountId = this.account()?.id;
+    if (tx.emitter.id === currentAccountId) return tx.receiver.owner.name;
+    return tx.emitter.owner.name;
   }
+
+    getAmount(tx: FullTransaction): string {
+    const currentAccountId = this.account()?.id;
+    const amount = tx.emitter.id === currentAccountId ? -tx.amount : tx.amount;
+    return `${amount} €`;
+    }
+
+
+
+
+
+
+
 
   // Quand on change de compte → recharger les transactions
   onAccountChange(event: Event): void {
@@ -164,21 +199,19 @@ export class AccountComponent implements OnInit {
   }
 
 
-  // onViewAllClick(): void {
-  //    this.router.navigate(['/transactionslist'])
-  //  }
+
+  onViewAllClick(): void {
+     this.loadTransactions();
+      // Option : scroll vers la section des transactions
+      setTimeout(() => {
+        document.querySelector('.transactions-section')?.scrollIntoView({ behavior: 'smooth' });
+      }, 100);
+   }
 
   onOpenClick(): void {
     this.openCreateForm();
   }
 
-  onViewAllClick(): void {
-    this.loadTransactions();
-    // Option : scroll vers la section des transactions
-    setTimeout(() => {
-      document.querySelector('.transactions-section')?.scrollIntoView({ behavior: 'smooth' });
-    }, 100);
-  }
 
   // Méthodes création compte (inchangées)
   openCreateForm(): void {
