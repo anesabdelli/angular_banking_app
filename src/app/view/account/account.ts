@@ -127,12 +127,10 @@ private loadTransactions(): void {
     return `${amount} €`;
     }
 
-
-
-
-
-
-
+  goToTransactionDetail(transactionId: string) {
+   
+    this.router.navigate(['/transaction', transactionId]);
+  }
 
   // Quand on change de compte → recharger les transactions
   onAccountChange(event: Event): void {
