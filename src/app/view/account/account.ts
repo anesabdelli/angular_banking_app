@@ -1,6 +1,6 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms'; 
+import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 
 import { Account } from '../../../services/account/account.interface';
@@ -164,9 +164,9 @@ export class AccountComponent implements OnInit {
   }
 
 
-  onViewAllClick(): void {
-     this.router.navigate(['/transactionslist'])
-   }
+  // onViewAllClick(): void {
+  //    this.router.navigate(['/transactionslist'])
+  //  }
 
   onOpenClick(): void {
     this.openCreateForm();
