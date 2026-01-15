@@ -17,10 +17,10 @@ export interface AccountRepository {
   getAccountById(accountId: string): Observable<Account>;
   getAccounts(): Observable<Account[]>;
   // methode liée à l'ajout d'autres bank account pour le meme user
-  createAccount(data: CreateAccountDTO): Observable<Account>; 
+  createAccount(data: CreateAccountDTO): Observable<Account>;
 }
 
-export interface FullTransaction { 
+export interface FullTransaction {
   id: string;
   amount: number;
   description: string;
@@ -38,4 +38,8 @@ export interface FullTransaction {
       name: string;
     };
   };
+
+  displayAmount?: number;
+  otherParty?: string;
+  formattedDate?: string;
 }

@@ -65,7 +65,7 @@ export class TransactionComponent implements OnInit {
 
       try {
         const transaction = this.transactionModel();
-        console.log('[TransactionComponent] envoi payload', transaction);
+       
 
         if(transaction.emitterAccountId === transaction.receiverAccountId){
           this.transactionError.set(
@@ -74,12 +74,10 @@ export class TransactionComponent implements OnInit {
           return;
         }
 
-        const account = await firstValueFrom(this.accountInfo.getAccountById(transaction.emitterAccountId));
-
 
 
         const response = await this.transactionService.emitTransaction(transaction);
-        console.log('[TransactionComponent] réponse API', response);
+
 
         this.transactionResult.set(response);
 
@@ -95,8 +93,6 @@ export class TransactionComponent implements OnInit {
         const list = JSON.parse(localStorage.getItem('transactionDetails') ?? '[]');
         list.push(detailsTransaction);
         localStorage.setItem('transactionDetails', JSON.stringify(list));
-
-
 
 
         setTimeout(() => {
