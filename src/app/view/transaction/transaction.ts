@@ -62,6 +62,14 @@ export class TransactionComponent implements OnInit {
         const transaction = this.transactionModel();
         console.log('[TransactionComponent] envoi payload', transaction);
 
+        if(transaction.emitterAccountId === transaction.receiverAccountId){
+          this.transactionError.set(
+            'emitter and receiver are identique'
+          );
+          return;
+        }
+
+
         const response = await this.transactionService.emitTransaction(transaction);
         console.log('[TransactionComponent] réponse API', response);
 
