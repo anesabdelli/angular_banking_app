@@ -40,7 +40,7 @@ export class Register {
         // Force Angular à rafraîchir l'affichage
         this.cdr.detectChanges();
         setTimeout(() => {
-          this.router.navigate(['login'])ga
+          this.router.navigate(['login'])
         }, 6000);
       },
       error: (err) => {

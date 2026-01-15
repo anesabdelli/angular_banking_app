@@ -1,371 +1,166 @@
-
 <div class="account-root">
   <h2>Mon espace compte</h2>
 
-
-<!--  <div class="welcome">-->
-<!--    {{ user ? 'Bienvenue, ' + user.name : '' }}-->
-<!--  </div>-->
-
-<!--  <div class="error">{{ error() || '' }}</div>-->
-<!--  <div class="loading">{{ loading() ? 'Chargement...' : '' }}</div>-->
-
-<!--  <div *ngIf="!loading() && accounts().length > 0; else noAccounts">-->
-
-<!--    &lt;!&ndash; Sélecteur de compte &ndash;&gt;-->
-<!--    <div class="account-selector">-->
-<!--      <label for="accountSelect">Choisir un compte :</label>-->
-<!--      <select id="accountSelect" (change)="onAccountChange($event)">-->
-<!--        <option-->
-<!--          *ngFor="let acc of accounts()"-->
-<!--          [value]="acc.id"-->
-<!--          [selected]="account() && account()!.id === acc.id">-->
-<!--          {{ acc.label || acc.id }} — {{ acc.balance | currency:'EUR':'symbol':'1.2-2' }}-->
-<!--        </option>-->
-<!--      </select>-->
-<!--    </div>-->
-
-<!--    &lt;!&ndash; Détails compte &ndash;&gt;-->
-<!--    <section class="account-details" *ngIf="account()">-->
-<!--      <h3>{{ account()!.label || 'Compte ' + account()!.id }}</h3>-->
-<!--      <p><strong>Solde :</strong> {{ account()!.balance | currency:'EUR':'symbol':'1.2-2' }}</p>-->
-<!--      <p><strong>Ouvert le :</strong> {{ account()!.openAt | date:'dd/MM/yyyy HH:mm' }}</p>-->
-
-<!--      <div class="actions">-->
-<!--        <button (click)="onInfosClick()">Infos</button>-->
-<!--        <button (click)="onSendClick()">Envoyer</button>-->
-<!--        <button (click)="onOpenClick()">Ouvrir un nouveau compte</button>-->
-<!--        <button (click)="onViewAllClick()">Historique transactions</button>-->
-
-<!--      </div>-->
-<!--    </section>-->
-
-<!--    &lt;!&ndash; SECTION TRANSACTIONS &ndash;&gt;-->
-<!--    <section class="transactions-section" *ngIf="account()">-->
-<!--      <h3>Historique des transactions</h3>-->
-
-<!--      <div *ngIf="transactionsLoading()">Chargement des transactions...</div>-->
-<!--      <div *ngIf="transactionsError()" class="error">{{ transactionsError() }}</div>-->
-
-<!--      <div *ngIf="!transactionsLoading() && transactions().length === 0 && !transactionsError()">-->
-<!--        Aucune transaction pour ce compte.-->
-<!--      </div>-->
-
-<!--      <table *ngIf="transactions().length > 0" class="transactions-table">-->
-<!--        <thead>-->
-<!--          <tr>-->
-<!--            <th>Date</th>-->
-<!--            <th>Description</th>-->
-<!--            <th>Montant</th>-->
-<!--            <th>Type</th>-->
-<!--            <th>Autre partie</th>-->
-<!--          </tr>-->
-<!--        </thead>-->
-<!--        <tbody>-->
-<!--          <tr *ngFor="let tx of transactions()">-->
-<!--            <td>{{ tx.emittedAt | date:'dd/MM/yyyy HH:mm' }}</td>-->
-<!--            <td>{{ tx.description || '(sans description)' }}</td>-->
-<!--            <td -->
-<!--              [class.debit]="tx.emitter.id === account()?.id"-->
-<!--              [class.credit]="tx.receiver.id === account()?.id">-->
-<!--              {{ tx.amount | currency:'EUR':'symbol':'1.2-2' }}-->
-<!--            </td>-->
-<!--            <td>{{ tx.emitter.id === account()?.id ? 'Débit' : 'Crédit' }}</td>-->
-<!--            <td>-->
-<!--              {{ tx.emitter.id === account()?.id -->
-<!--                ? 'Vers ' + tx.receiver.owner.name -->
-<!--                : 'De ' + tx.emitter.owner.name }}-->
-<!--            </td>-->
-<!--          </tr>-->
-<!--        </tbody>-->
-<!--      </table>-->
-<!--    </section>-->
-
-<!--    &lt;!&ndash; Formulaire création compte &ndash;&gt;-->
-<!--    <div *ngIf="showCreateForm()" class="create-form">-->
-<!--      <h3>Créer un nouveau compte</h3>-->
-<!--      &lt;!&ndash; ... le formulaire reste identique ... &ndash;&gt;-->
-<!--      <div class="form-group">-->
-<!--        <label for="label">Nom / Libellé :</label>-->
-
-<!--        <input-->
-<!--          id="label"-->
-<!--          type="text"-->
-<!--          placeholder="ex: Compte Courant, Livret A, Vacances..."-->
-<!--          [(ngModel)]="newAccount().label"-->
-<!--        />-->
-<!--      </div>-->
-<!--      <div class="form-group">-->
-<!--        <label for="initialBalance">Solde initial (€) :</label>-->
-
-<!--        <input-->
-<!--          id="initialBalance"-->
-<!--          type="number"-->
-<!--          min="0"-->
-<!--          step="0.01"-->
-<!--          [(ngModel)]="newAccount().initialBalance"-->
-<!--        />-->
-<!--      </div>-->
-
-<!--      <div class="error" *ngIf="createError()">-->
-<!--        {{ createError() }}-->
-
-<!--      </div>-->
-<!--      <div class="error" *ngIf="createError()">{{ createError() }}</div>-->
-<!--      <div class="form-actions">-->
-<!--        <button-->
-<!--          class="btn-create"-->
-<!--          (click)="createNewAccount()"-->
-<!--          [disabled]="createLoading()">-->
-<!--          {{ createLoading() ? 'Création en cours...' : 'Créer le compte' }}-->
-<!--        </button>-->
-
-<!--        <button-->
-<!--          class="btn-cancel"-->
-<!--          (click)="closeCreateForm()"-->
-<!--          [disabled]="createLoading()">-->
-<!--          Annuler-->
-
-<!--        </button>-->
-<!--        <button class="btn-cancel" (click)="closeCreateForm()" [disabled]="createLoading()">Annuler</button>-->
-<!--      </div>-->
-<!--    </div>-->
-<!--  </div>-->
-
-<!--  <ng-template #noAccounts>-->
-<!--    <p>Aucun compte trouvé pour cet utilisateur.</p>-->
-<!--    <button (click)="openCreateForm()">Ouvrir un premier compte</button>-->
-<!--  </ng-template>-->
-<!--</div>-->
-
-
-<div class="container mt-4">
-  <!-- En-tête -->
-  <div class="row mb-4">
-    <div class="col-12">
-      <h2 class="text-center mb-3">Mon espace compte</h2>
-      <div class="alert alert-info text-center" *ngIf="user">
-        Bienvenue, <strong>{{ user.name }}</strong>
-      </div>
-    </div>
-  </div>
-
-  <!-- Messages d'erreur et chargement -->
-  <div class="row" *ngIf="error()">
-    <div class="col-12">
-      <div class="alert alert-danger" role="alert">{{ error() }}</div>
-    </div>
-  </div>
-
-  <div class="row" *ngIf="loading()">
-    <div class="col-12">
-      <div class="alert alert-warning" role="alert">Chargement...</div>
-    </div>
-  </div>
-
-  <div *ngIf="!loading() && accounts().length > 0; else noAccounts">
-
-    <!-- Sélecteur de compte -->
+  <div class="container mt-4">
+    <!-- En-tête -->
     <div class="row mb-4">
-      <div class="col-12 col-md-8 offset-md-2">
-        <div class="card shadow-sm">
-          <div class="card-body">
-            <label for="accountSelect" class="form-label">Choisir un compte :</label>
-            <select id="accountSelect" class="form-select" (change)="onAccountChange($event)">
-              <option
-                *ngFor="let acc of accounts()"
-                [value]="acc.id"
-                [selected]="account() && account()!.id === acc.id">
-                {{ acc.label || acc.id }} — {{ acc.balance | currency:'EUR':'symbol':'1.2-2' }}
-              </option>
-            </select>
-          </div>
+      <div class="col-12">
+        <h2 class="text-center mb-3">Mon espace compte</h2>
+        <div class="alert alert-info text-center" *ngIf="user">
+          Bienvenue, <strong>{{ user.name }}</strong>
         </div>
       </div>
     </div>
 
-    <!-- Détails du compte -->
-    <div class="row mb-4" *ngIf="account()">
-      <div class="col-12 col-md-8 offset-md-2">
-        <div class="card shadow">
-          <div class="card-body">
-            <h3 class="card-title">{{ account()!.label || 'Compte ' + account()!.id }}</h3>
-            <p class="mb-2"><strong>Solde :</strong> <span class="text-success fs-5">{{ account()!.balance | currency:'EUR':'symbol':'1.2-2' }}</span></p>
-            <p class="mb-3"><strong>Ouvert le :</strong> {{ account()!.openAt | date:'dd/MM/yyyy HH:mm' }}</p>
+    <!-- Messages d'erreur et chargement -->
+    <div class="row" *ngIf="error()">
+      <div class="col-12">
+        <div class="alert alert-danger" role="alert">{{ error() }}</div>
+      </div>
+    </div>
+    <div class="row" *ngIf="loading()">
+      <div class="col-12">
+        <div class="alert alert-warning" role="alert">Chargement...</div>
+      </div>
+    </div>
 
-            <div class="d-grid gap-2">
-              <button class="btn btn-outline-primary" (click)="onInfosClick()">
-                Infos
-              </button>
-              <button class="btn btn-primary" (click)="onSendClick()">
-                Envoyer
-              </button>
-              <button class="btn btn-outline-secondary" (click)="onOpenClick()">
-                Ouvrir un nouveau compte
-              </button>
-              <button class="btn btn-outline-info" (click)="onViewAllClick()">
-                Historique transactions
-              </button>
+    <!-- Comptes -->
+    <div *ngIf="!loading() && accounts().length > 0; else noAccounts">
+
+      <!-- Sélecteur de compte -->
+      <div class="row mb-4">
+        <div class="col-12 col-md-8 offset-md-2">
+          <div class="card shadow-sm">
+            <div class="card-body">
+              <label for="accountSelect" class="form-label">Choisir un compte :</label>
+              <select id="accountSelect" class="form-select" (change)="onAccountChange($event)">
+                <option *ngFor="let acc of accounts()"
+                        [value]="acc.id"
+                        [selected]="account() && account()!.id === acc.id">
+                  {{ acc.label || acc.id }} — {{ acc.balance | currency:'EUR':'symbol':'1.2-2' }}
+                </option>
+              </select>
             </div>
           </div>
         </div>
       </div>
-    </div>
-<!-- SECTION TRANSACTIONS -->
-<section class="transactions-section" *ngIf="account()">
-  <h3>Historique des transactions</h3>
 
-  <div *ngIf="transactionsLoading()">Chargement des transactions...</div>
-  <div *ngIf="transactionsError()" class="error">{{ transactionsError() }}</div>
+      <!-- Détails du compte -->
+      <div class="row mb-4" *ngIf="account()">
+        <div class="col-12 col-md-8 offset-md-2">
+          <div class="card shadow">
+            <div class="card-body">
+              <h3 class="card-title">{{ account()!.label || 'Compte ' + account()!.id }}</h3>
+              <p class="mb-2"><strong>Solde :</strong> <span class="text-success fs-5">{{ account()!.balance | currency:'EUR':'symbol':'1.2-2' }}</span></p>
+              <p class="mb-3"><strong>Ouvert le :</strong> {{ account()!.openAt | date:'dd/MM/yyyy HH:mm' }}</p>
 
-  <div *ngIf="!transactionsLoading() && transactions().length === 0 && !transactionsError()">
-    Aucune transaction pour ce compte.
-  </div>
-
-  <table *ngIf="transactions().length > 0" class="transactions-table">
-    <thead>
-      <tr>
-        <th>Date</th>
-        <th>Description</th>
-        <th>Montant</th>
-        <th>Type</th>
-        <th>Autre partie</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let tx of transactions()">
-        <!-- Date sécurisée -->
-        <td>{{ tx.formattedDate ?? (tx.emittedAt | date:'dd/MM/yyyy HH:mm') }}</td>
-
-        <!-- Description -->
-        <td>{{ tx.description || '(sans description)' }}</td>
-
-        <!-- Montant avec classes debit/credit -->
-        <td [class.debit]="(tx.displayAmount ?? 0) < 0"
-            [class.credit]="(tx.displayAmount ?? 0) > 0">
-          {{ (tx.displayAmount ?? 0) | currency:'EUR':'symbol':'1.2-2' }}
-        </td>
-
-        <!-- Type Débit/Crédit -->
-        <td>{{ (tx.displayAmount ?? 0) < 0 ? 'Débit' : 'Crédit' }}</td>
-
-        <!-- Nom de l'autre partie -->
-        <td>{{ tx.otherParty ?? '' }}</td>
-      </tr>
-    </tbody>
-  </table>
-</section>
-
-            <div *ngIf="transactions().length > 0" class="table-responsive">
-              <table class="table table-hover">
-                <thead class="table-light">
-                <tr>
-                  <th>Date</th>
-                  <th>Description</th>
-                  <th>Montant</th>
-                  <th>Type</th>
-                  <th>Autre partie</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr *ngFor="let tx of transactions()">
-                  <td>{{ tx.emittedAt | date:'dd/MM/yyyy HH:mm' }}</td>
-                  <td>{{ tx.description || '(sans description)' }}</td>
-                  <td
-                    [class.text-danger]="tx.emitter.id === account()?.id"
-                    [class.text-success]="tx.receiver.id === account()?.id"
-                    class="fw-bold">
-                    {{ (tx.emitter.id === account()?.id ? '-' : '+') }}{{ tx.amount | currency:'EUR':'symbol':'1.2-2' }}
-                  </td>
-                  <td>
-                      <span
-                        class="badge"
-                        [class.bg-danger]="tx.emitter.id === account()?.id"
-                        [class.bg-success]="tx.receiver.id === account()?.id">
-                        {{ tx.emitter.id === account()?.id ? 'Débit' : 'Crédit' }}
-                      </span>
-                  </td>
-                  <td>
-                    {{ tx.emitter.id === account()?.id
-                    ? 'Vers ' + tx.receiver.owner.name
-                    : 'De ' + tx.emitter.owner.name }}
-                  </td>
-                </tr>
-                </tbody>
-              </table>
+              <div class="d-grid gap-2">
+                <button class="btn btn-outline-primary" (click)="onInfosClick()">Infos</button>
+                <button class="btn btn-primary" (click)="onSendClick()">Envoyer</button>
+                <button class="btn btn-outline-secondary" (click)="onOpenClick()">Ouvrir un nouveau compte</button>
+                <button class="btn btn-outline-info" (click)="onViewAllClick()">Historique transactions</button>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
 
-    <!-- Formulaire création compte -->
-    <div class="row mb-4" *ngIf="showCreateForm()">
-      <div class="col-12 col-md-8 offset-md-2">
-        <div class="card shadow">
-          <div class="card-body">
-            <h3 class="card-title mb-4">Créer un nouveau compte</h3>
+      <!-- SECTION TRANSACTIONS -->
+      <div class="row mb-4" *ngIf="account()">
+        <div class="col-12 col-md-8 offset-md-2">
+          <div class="card shadow">
+            <div class="card-body">
+              <h3 class="card-title">Historique des transactions</h3>
 
-            <div class="mb-3">
-              <label for="label" class="form-label">Nom / Libellé :</label>
-              <input
-                id="label"
-                type="text"
-                class="form-control"
-                placeholder="ex: Compte Courant, Livret A, Vacances..."
-                [(ngModel)]="newAccount().label"
-              />
-            </div>
+              <div *ngIf="transactionsLoading()" class="alert alert-warning">Chargement des transactions...</div>
+              <div *ngIf="transactionsError()" class="alert alert-danger">{{ transactionsError() }}</div>
+              <div *ngIf="!transactionsLoading() && transactions().length === 0 && !transactionsError()">
+                Aucune transaction pour ce compte.
+              </div>
 
-            <div class="mb-3">
-              <label for="initialBalance" class="form-label">Solde initial (€) :</label>
-              <input
-                id="initialBalance"
-                type="number"
-                class="form-control"
-                min="0"
-                step="0.01"
-                [(ngModel)]="newAccount().initialBalance"
-              />
-            </div>
-
-            <div *ngIf="createError()" class="alert alert-danger mb-3">
-              {{ createError() }}
-            </div>
-
-            <div class="d-grid gap-2">
-              <button
-                class="btn btn-success"
-                (click)="createNewAccount()"
-                [disabled]="createLoading()">
-                {{ createLoading() ? 'Création en cours...' : 'Créer le compte' }}
-              </button>
-              <button
-                class="btn btn-secondary"
-                (click)="closeCreateForm()"
-                [disabled]="createLoading()">
-                Annuler
-              </button>
+              <div *ngIf="transactions().length > 0" class="table-responsive">
+                <table class="table table-hover">
+                  <thead class="table-light">
+                    <tr>
+                      <th>Date</th>
+                      <th>Description</th>
+                      <th>Montant</th>
+                      <th>Type</th>
+                      <th>Autre partie</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let tx of transactions()">
+                      <td>{{ tx.formattedDate ?? (tx.emittedAt | date:'dd/MM/yyyy HH:mm') }}</td>
+                      <td>{{ tx.description || '(sans description)' }}</td>
+                      <td [class.text-danger]="(tx.displayAmount ?? tx.amount) < 0"
+                          [class.text-success]="(tx.displayAmount ?? tx.amount) > 0"
+                          class="fw-bold">
+                        {{ (tx.displayAmount ?? tx.amount) | currency:'EUR':'symbol':'1.2-2' }}
+                      </td>
+                      <td>
+                        <span class="badge"
+                              [class.bg-danger]="(tx.displayAmount ?? tx.amount) < 0"
+                              [class.bg-success]="(tx.displayAmount ?? tx.amount) > 0">
+                          {{ (tx.displayAmount ?? tx.amount) < 0 ? 'Débit' : 'Crédit' }}
+                        </span>
+                      </td>
+                      <td>{{ tx.otherParty ?? '' }}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
-  </div>
 
-  <!-- Template aucun compte -->
-  <ng-template #noAccounts>
-    <div class="row">
-      <div class="col-12 col-md-6 offset-md-3">
-        <div class="card shadow text-center">
-          <div class="card-body py-5">
-            <p class="mb-4">Aucun compte trouvé pour cet utilisateur.</p>
-            <button class="btn btn-primary" (click)="openCreateForm()">
-              Ouvrir un premier compte
-            </button>
+      <!-- Formulaire création compte -->
+      <div class="row mb-4" *ngIf="showCreateForm()">
+        <div class="col-12 col-md-8 offset-md-2">
+          <div class="card shadow">
+            <div class="card-body">
+              <h3 class="card-title mb-4">Créer un nouveau compte</h3>
+
+              <div class="mb-3">
+                <label for="label" class="form-label">Nom / Libellé :</label>
+                <input id="label" type="text" class="form-control" placeholder="ex: Compte Courant, Livret A, Vacances..." [(ngModel)]="newAccount().label" />
+              </div>
+              <div class="mb-3">
+                <label for="initialBalance" class="form-label">Solde initial (€) :</label>
+                <input id="initialBalance" type="number" class="form-control" min="0" step="0.01" [(ngModel)]="newAccount().initialBalance" />
+              </div>
+
+              <div *ngIf="createError()" class="alert alert-danger mb-3">
+                {{ createError() }}
+              </div>
+
+              <div class="d-grid gap-2">
+                <button class="btn btn-success" (click)="createNewAccount()" [disabled]="createLoading()">
+                  {{ createLoading() ? 'Création en cours...' : 'Créer le compte' }}
+                </button>
+                <button class="btn btn-secondary" (click)="closeCreateForm()" [disabled]="createLoading()">Annuler</button>
+              </div>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-  </ng-template>
-</div>
+
+    </div> <!-- fin *ngIf comptes -->
+
+    <!-- Template aucun compte -->
+    <ng-template #noAccounts>
+      <div class="row">
+        <div class="col-12 col-md-6 offset-md-3">
+          <div class="card shadow text-center">
+            <div class="card-body py-5">
+              <p>Aucun compte trouvé pour cet utilisateur.</p>
+              <button class="btn btn-primary" (click)="openCreateForm()">Ouvrir un premier compte</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </ng-template>
+
+  </div> <!-- container -->
+</div> <!-- account-root -->
