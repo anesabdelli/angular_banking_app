@@ -12,10 +12,16 @@ export interface TransactionDto{
   //example: Refund
 }
 
-export interface TransactionResponse{
-   emitterAccountId : string
-   receiverAccountId:	string
-   amount:	number
-   description:	string
-
+export interface TransactionResponse {
+  id: string;
+  amount: number;
+  description: string;
+  status: 'pending' | 'success' | 'failed';
+  emittedAt: string;
+  receiver: {
+    owner: {
+      name: string;
+    };
+  };
 }
+

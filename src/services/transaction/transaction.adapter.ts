@@ -8,14 +8,22 @@ export class TransactionAdapter implements EmitTransaction{
 
   constructor(private http: HttpClient){}
 
-  emitTransaction(data: TransactionDto): Promise<TransactionResponse>{
-     const apiUrl = 'https://coding-bank.fly.dev/transactions/emit';
+  private  apiUrl = 'https://coding-bank.fly.dev/transactions/emit';
 
-     const transaction = data;
-
-     return firstValueFrom(
-      this.http.post<TransactionResponse>(apiUrl, transaction)
-     );
-
+ emitTransaction(data: TransactionDto): Promise<TransactionResponse> {
+      console.log(
+      '[TransactionAdapter] payload envoyé',
+      JSON.stringify(data, null, 2)
+    );
+    return firstValueFrom(
+      this.http.post<TransactionResponse>(this.apiUrl, data)
+    ).then((response) => {
+      console.log('[TransactionAdapter] réponse API', response);
+      return response;
+    });
   }
+
 }
+
+//cfa510da-b18e-4391-81ca-f7cfb19697bd
+//ed3dc058-2e6a-458e-b930-18690bbe20e7

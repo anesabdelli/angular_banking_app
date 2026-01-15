@@ -3,10 +3,13 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms'; 
 import { Router, RouterModule } from '@angular/router';
 
-import { Account, FullTransaction } from '../../../services/account/account.interface';
+import { Account } from '../../../services/account/account.interface';
 import { AccountService } from '../../../services/account/account.service';
 import { UserService } from '../../../services/user/user.service';
 import { User } from '../../../services/user/user.interface';
+
+// → Ajouts pour les transactions
+import { FullTransaction } from '../../../services/account/account.interface';
 
 @Component({
   selector: 'app-account',
