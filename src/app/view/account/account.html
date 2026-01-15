@@ -1,19 +1,16 @@
 <div class="account-root">
   <h2>Mon espace compte</h2>
 
-  <!-- Bienvenue utilisateur -->
   <div class="welcome">
     {{ user ? 'Bienvenue, ' + user.name : '' }}
   </div>
 
-  <!-- Messages globaux -->
   <div class="error">{{ error() || '' }}</div>
   <div class="loading">{{ loading() ? 'Chargement...' : '' }}</div>
 
-  <!-- Contenu principal -->
   <div *ngIf="!loading() && accounts().length > 0; else noAccounts">
 
-    <!-- Sélection du compte -->
+    <!-- Sélecteur de compte -->
     <div class="account-selector">
       <label for="accountSelect">Choisir un compte :</label>
       <select id="accountSelect" (change)="onAccountChange($event)">
@@ -26,7 +23,7 @@
       </select>
     </div>
 
-    <!-- Détails du compte sélectionné -->
+    <!-- Détails compte -->
     <section class="account-details" *ngIf="account()">
       <h3>{{ account()!.label || 'Compte ' + account()!.id }}</h3>
       <p><strong>Solde :</strong> {{ account()!.balance | currency:'EUR':'symbol':'1.2-2' }}</p>
@@ -37,15 +34,58 @@
         <button (click)="onSendClick()">Envoyer</button>
         <button (click)="onOpenClick()">Ouvrir un nouveau compte</button>
         <button (click)="onViewAllClick()">Historique transactions</button>
+
       </div>
     </section>
 
-    <!-- Formulaire de création (apparait quand showCreateForm = true) -->
+    <!-- SECTION TRANSACTIONS -->
+    <section class="transactions-section" *ngIf="account()">
+      <h3>Historique des transactions</h3>
+
+      <div *ngIf="transactionsLoading()">Chargement des transactions...</div>
+      <div *ngIf="transactionsError()" class="error">{{ transactionsError() }}</div>
+
+      <div *ngIf="!transactionsLoading() && transactions().length === 0 && !transactionsError()">
+        Aucune transaction pour ce compte.
+      </div>
+
+      <table *ngIf="transactions().length > 0" class="transactions-table">
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Description</th>
+            <th>Montant</th>
+            <th>Type</th>
+            <th>Autre partie</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let tx of transactions()">
+            <td>{{ tx.emittedAt | date:'dd/MM/yyyy HH:mm' }}</td>
+            <td>{{ tx.description || '(sans description)' }}</td>
+            <td 
+              [class.debit]="tx.emitter.id === account()?.id"
+              [class.credit]="tx.receiver.id === account()?.id">
+              {{ tx.amount | currency:'EUR':'symbol':'1.2-2' }}
+            </td>
+            <td>{{ tx.emitter.id === account()?.id ? 'Débit' : 'Crédit' }}</td>
+            <td>
+              {{ tx.emitter.id === account()?.id 
+                ? 'Vers ' + tx.receiver.owner.name 
+                : 'De ' + tx.emitter.owner.name }}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- Formulaire création compte -->
     <div *ngIf="showCreateForm()" class="create-form">
       <h3>Créer un nouveau compte</h3>
-
+      <!-- ... le formulaire reste identique ... -->
       <div class="form-group">
         <label for="label">Nom / Libellé :</label>
+
         <input
           id="label"
           type="text"
@@ -53,9 +93,9 @@
           [(ngModel)]="newAccount().label"
         />
       </div>
-
       <div class="form-group">
         <label for="initialBalance">Solde initial (€) :</label>
+
         <input
           id="initialBalance"
           type="number"
@@ -67,8 +107,9 @@
 
       <div class="error" *ngIf="createError()">
         {{ createError() }}
-      </div>
 
+      </div>
+      <div class="error" *ngIf="createError()">{{ createError() }}</div>
       <div class="form-actions">
         <button
           class="btn-create"
@@ -82,12 +123,13 @@
           (click)="closeCreateForm()"
           [disabled]="createLoading()">
           Annuler
+
         </button>
+        <button class="btn-cancel" (click)="closeCreateForm()" [disabled]="createLoading()">Annuler</button>
       </div>
     </div>
   </div>
 
-  <!-- Cas aucun compte -->
   <ng-template #noAccounts>
     <p>Aucun compte trouvé pour cet utilisateur.</p>
     <button (click)="openCreateForm()">Ouvrir un premier compte</button>

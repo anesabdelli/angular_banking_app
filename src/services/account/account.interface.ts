@@ -19,3 +19,23 @@ export interface AccountRepository {
   // methode liée à l'ajout d'autres bank account pour le meme user
   createAccount(data: CreateAccountDTO): Observable<Account>; 
 }
+
+export interface FullTransaction { 
+  id: string;
+  amount: number;
+  description: string;
+  status: 'pending' | 'success' | 'failed';
+  emittedAt: string;
+  emitter: {
+    id: string;
+    owner: {
+      name: string;
+    };
+  };
+  receiver: {
+    id: string;
+    owner: {
+      name: string;
+    };
+  };
+}
