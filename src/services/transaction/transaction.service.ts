@@ -1,6 +1,7 @@
 import { Injectable } from "@angular/core";
 import { TransactionAdapter } from "./transaction.adapter";
 import { TransactionDto } from "./transaction.interface";
+import { Observable } from "rxjs";
 
 @Injectable({ providedIn: 'root' })
 export class TransactionService{
@@ -13,5 +14,9 @@ export class TransactionService{
 
   getTransactionById(id:string){
     return this.transactionAdapter.getTransaction(id)
+  }
+
+  cancelTransaction(transactionId: string): Observable<any> {
+    return this.transactionAdapter.cancelTransaction(transactionId);
   }
 }

@@ -8,9 +8,9 @@ import { AccountService } from '../../../services/account/account.service';
 import { UserService } from '../../../services/user/user.service';
 import { User } from '../../../services/user/user.interface';
 
-// → Ajouts pour les transactions
 import { FullTransaction } from '../../../services/account/account.interface';
-import { TransactionResponse } from '../../../services/transaction/transaction.interface';
+import { TransactionService } from '../../../services/transaction/transaction.service';
+import { firstValueFrom } from 'rxjs';
 import { getInitials } from '../../../services/user/getInitials';
 
 @Component({
@@ -42,14 +42,69 @@ export class AccountComponent implements OnInit {
   transactionsLoading = signal<boolean>(false);
   transactionsError = signal<string | null>(null);
 
+  // Countdown : txId → secondes restantes
+  countdownMap = signal<Map<string, number>>(new Map());
+
   constructor(
     private accountService: AccountService,
+    private transactionService: TransactionService,
     private userService: UserService,
     private router: Router
   ) {}
 
   ngOnInit(): void {
     this.loadUserAndAccounts();
+
+    // Mise à jour du countdown toutes les secondes
+    setInterval(() => {
+      this.updateCountdowns();
+    }, 1000);
+  }
+
+  // Met à jour les countdowns en live
+  private updateCountdowns(): void {
+    const now = Date.now();
+    const updated = new Map<string, number>();
+
+    for (const tx of this.transactions()) {
+      if (tx.status !== 'pending' || tx.emitter?.id !== this.account()?.id) continue;
+
+      const emitted = new Date(tx.emittedAt).getTime();
+      const elapsed = Math.floor((now - emitted) / 1000);
+      const remaining = 8 - elapsed;
+
+      if (remaining > 0) {
+        updated.set(tx.id, remaining);
+      }
+    }
+
+    this.countdownMap.set(updated);
+  }
+
+  // Annuler une transaction pending
+  async cancelPendingTransaction(txId: string): Promise<void> {
+    if (!confirm("Voulez-vous vraiment annuler cette transaction ?")) return;
+
+    try {
+      await firstValueFrom(this.transactionService.cancelTransaction(txId));
+      alert("Transaction annulée avec succès !");
+      this.loadTransactions();
+    } catch (err: any) {
+      console.error("Échec annulation", err);
+      alert("Impossible d'annuler la transaction");
+    }
+  }
+
+  isCancellable(tx: FullTransaction): boolean {
+    return this.countdownMap().has(tx.id);
+  }
+
+  getCountdown(txId: string): number {
+    return this.countdownMap().get(txId) ?? 0;
+  }
+
+  hasAnyCancellable(): boolean {
+    return this.countdownMap().size > 0;
   }
 
   private loadUserAndAccounts(): void {
@@ -68,7 +123,7 @@ export class AccountComponent implements OnInit {
         this.accounts.set(accs);
         if (accs.length > 0) {
           this.account.set(accs[0]);
-          this.loadTransactions(); // ← on charge les tx du premier compte par défaut
+          this.loadTransactions();
         }
         this.loading.set(false);
       },
@@ -80,59 +135,57 @@ export class AccountComponent implements OnInit {
     });
   }
 
-  // Chargement des transactions du compte actuellement sélectionné
-private loadTransactions(): void {
-  const currentAccount = this.account();
-  if (!currentAccount) return;
+  private loadTransactions(): void {
+    const currentAccount = this.account();
+    if (!currentAccount) return;
 
-  this.transactionsLoading.set(true);
-  this.transactionsError.set(null);
+    this.transactionsLoading.set(true);
+    this.transactionsError.set(null);
 
-  this.accountService.getTransactionsByAccount(currentAccount.id).subscribe({
-    next: (txs) => {
-    const sorted = (txs ?? [])
-      .sort((a, b) => new Date(b.emittedAt).getTime() - new Date(a.emittedAt).getTime())
-      .slice(0, 5)
-      .map(tx => ({
-        ...tx,
-        displayAmount: tx.emitter.id === currentAccount.id ? -tx.amount : tx.amount,
-        otherParty: tx.emitter.id === currentAccount.id
-          ? 'Vers ' + `${getInitials(tx.receiver.owner.name)}.`
-          : 'De ' + `${getInitials(tx.receiver.owner.name)}.`,
-      }));
+    this.accountService.getTransactionsByAccount(currentAccount.id).subscribe({
+      next: (txs) => {
+        const sorted = (txs ?? [])
+          .sort((a, b) => new Date(b.emittedAt).getTime() - new Date(a.emittedAt).getTime())
+          .slice(0, 5)
+          .map(tx => ({
+            ...tx,
+            displayAmount: tx.emitter.id === currentAccount.id ? -tx.amount : tx.amount,
+            otherParty: tx.emitter.id === currentAccount.id
+              ? 'Vers ' + `${getInitials(tx.receiver.owner.name)}.`
+              : 'De ' + `${getInitials(tx.emitter.owner.name)}.`,
+          }));
 
-  this.transactions.set(sorted);
-      this.transactionsLoading.set(false);
-    },
+        this.transactions.set(sorted);
+        this.transactionsLoading.set(false);
 
-    error: (err) => {
-      console.error('Erreur chargement transactions:', err);
-      this.transactionsError.set('Impossible de charger les transactions');
-      this.transactionsLoading.set(false);
-    }
-  });
-}
+        // Mise à jour immédiate des countdowns après chargement
+        this.updateCountdowns();
+      },
+      error: (err) => {
+        console.error('Erreur chargement transactions:', err);
+        this.transactionsError.set('Impossible de charger les transactions');
+        this.transactionsLoading.set(false);
+      }
+    });
+  }
 
-
-    // Récupère l'autre partie de la transaction (émetteur ou receveur)
+  // Récupère l'autre partie de la transaction (émetteur ou receveur)
   getOtherParty(tx: FullTransaction): string {
     const currentAccountId = this.account()?.id;
     if (tx.emitter.id === currentAccountId) return tx.receiver.owner.name;
     return tx.emitter.owner.name;
   }
 
-    getAmount(tx: FullTransaction): string {
+  getAmount(tx: FullTransaction): string {
     const currentAccountId = this.account()?.id;
     const amount = tx.emitter.id === currentAccountId ? -tx.amount : tx.amount;
     return `${amount} €`;
-    }
+  }
 
   goToTransactionDetail(transactionId: string) {
-   
     this.router.navigate(['/transaction', transactionId]);
   }
 
-  // Quand on change de compte → recharger les transactions
   onAccountChange(event: Event): void {
     const target = event.target as HTMLSelectElement;
     const accountId = target.value;
@@ -140,11 +193,10 @@ private loadTransactions(): void {
     const selected = this.accounts().find(acc => acc.id === accountId);
     if (selected) {
       this.account.set(selected);
-      this.loadTransactions();           // ← important
+      this.loadTransactions();
     }
   }
 
-  // Création de compte (inchangé sauf petite amélioration)
   async createNewAccount(): Promise<void> {
     const data = this.newAccount();
 
@@ -168,7 +220,7 @@ private loadTransactions(): void {
           this.accounts.set(updatedAccounts);
           if (created) {
             this.account.set(created);
-            this.loadTransactions(); // ← recharge aussi les tx (vide au départ)
+            this.loadTransactions();
           }
         }
       });
@@ -181,7 +233,6 @@ private loadTransactions(): void {
     }
   }
 
-  // Boutons
   onInfosClick(): void {
     alert(this.account()
       ? `Compte ID : ${this.account()!.id}\nSolde : ${this.account()!.balance} €`
@@ -196,22 +247,17 @@ private loadTransactions(): void {
     }
   }
 
-
-
   onViewAllClick(): void {
-     this.loadTransactions();
-      // Option : scroll vers la section des transactions
-      setTimeout(() => {
-        document.querySelector('.transactions-section')?.scrollIntoView({ behavior: 'smooth' });
-      }, 100);
-   }
+    this.loadTransactions();
+    setTimeout(() => {
+      document.querySelector('.transactions-section')?.scrollIntoView({ behavior: 'smooth' });
+    }, 100);
+  }
 
   onOpenClick(): void {
     this.openCreateForm();
   }
 
-
-  // Méthodes création compte (inchangées)
   openCreateForm(): void {
     this.newAccount.set({ label: '', initialBalance: 0 });
     this.createError.set(null);
