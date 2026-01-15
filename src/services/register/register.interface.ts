@@ -1,11 +1,11 @@
 import { Observable } from "rxjs";
+import { User } from "../user/user.interface";
 
-export interface User {
+export interface UserInput {
   name: string;
   password: string;
-  // codeClient?: string;
 }
 
-export interface RegisterUser {
-  register(user: User): Observable<User>;
+export interface RegisterUserInterface {
+  register(user: UserInput): Observable<User>;
 }

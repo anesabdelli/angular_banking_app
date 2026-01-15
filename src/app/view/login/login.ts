@@ -1,8 +1,9 @@
 import { Component, signal, ChangeDetectionStrategy } from '@angular/core';
 import { form, Field, required, submit } from '@angular/forms/signals';
 import { Router } from '@angular/router';
-import { LoginService } from '../../services/login/loginService';
-import { LoginData } from '../../services/login/Login.interface';
+import { LoginData } from '../../../services/login/Login.interface';
+import { LoginService } from '../../../services/login/login.service';
+
 @Component({
   selector: 'app-login',
   templateUrl: './login.html',
@@ -51,11 +52,16 @@ export class LoginComponent {
           password: loginData.password,
         });
 
-        localStorage.setItem('user', JSON.stringify({
-          name: result.name,
-          clientCode: result.clientCode
-        }));
-        
+        const user = {
+          name: result.user.name,
+          clientCode: result.user.clientCode
+        }
+
+
+        localStorage.setItem('jwt', result.jwt);
+
+        localStorage.setItem('user',JSON.stringify(user));
+
         this.loginSuccess.set(true);
 
         setTimeout(() => {

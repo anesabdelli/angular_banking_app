@@ -1,7 +1,6 @@
 import { Injectable } from "@angular/core";
-import { LoginData, LoginInterface } from "./Login.interface";
+import { LoginData} from "./Login.interface";
 import { LoginAdapter } from "./login.adapter";
-import { Observable } from "rxjs";
 
 @Injectable({ providedIn: 'root' })
 export class LoginService {

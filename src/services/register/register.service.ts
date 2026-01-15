@@ -1,7 +1,11 @@
 import { Injectable } from "@angular/core";
 import { RegisterAdapter } from "./register.adapter";
-import { User } from "./register.interface";
+
 import { Observable } from "rxjs";
+import { User } from "../user/user.interface";
+import { UserInput } from "./register.interface";
+
+
 
 
 @Injectable({
@@ -10,7 +14,7 @@ import { Observable } from "rxjs";
 export class RegisterService {
   constructor(private adapter: RegisterAdapter) {}
 
-  register(user: User): Observable<any> {
-    return this.adapter.register(user);
+  register(userInput: UserInput): Observable<any> {
+    return this.adapter.register(userInput);
   }
 }
