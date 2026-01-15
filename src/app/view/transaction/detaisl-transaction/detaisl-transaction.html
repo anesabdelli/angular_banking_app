@@ -1,0 +1,51 @@
+<div *ngIf="loading()">
+  Chargement de la transaction...
+</div>
+
+<div *ngIf="error()">
+  <div class="alert alert-danger">{{ error() }}</div>
+</div>
+
+<div *ngIf="transaction()">
+  <h3>Détails de la transaction</h3>
+
+  <p>
+    <strong>Montant :</strong>
+    {{ transaction()?.amount | currency:'EUR' }}
+  </p>
+
+<p>
+  <strong>Émetteur :</strong>
+  <span class="avatar">{{ getInitials(transaction()?.emitter?.owner?.name || '') }}</span>
+  {{ transaction()?.emitter?.owner?.name || '(inconnu)' }}
+</p>
+
+<p>
+  <strong>Bénéficiaire :</strong>
+  <span class="avatar">{{ getInitials(transaction()?.receiver?.owner?.name || '') }}</span>
+  {{ transaction()?.receiver?.owner?.name || '(inconnu)' }}
+</p>
+
+
+  <p>
+    <strong>Description :</strong>
+    {{ transaction()?.description || '(aucune description)' }}
+  </p>
+
+  <p>
+    <strong>Date :</strong>
+    {{ transaction()?.emittedAt | date:'dd/MM/yyyy HH:mm' }}
+  </p>
+
+  <p>
+    <strong>Statut :</strong>
+    <span
+      [ngClass]="{
+        'badge bg-success': transaction()?.status === 'success',
+        'badge bg-warning': transaction()?.status === 'pending',
+        'badge bg-danger': transaction()?.status === 'failed'
+      }">
+      {{ transaction()?.status || '(inconnu)' }}
+    </span>
+  </p>
+</div>

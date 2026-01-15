@@ -18,6 +18,11 @@ export interface TransactionResponse {
   description: string;
   status: 'pending' | 'success' | 'failed';
   emittedAt: string;
+  emitter: {
+    owner:{
+      name: string
+    }
+  }
   receiver: {
     owner: {
       name: string;

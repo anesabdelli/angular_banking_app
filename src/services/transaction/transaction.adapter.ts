@@ -20,6 +20,16 @@ export class TransactionAdapter implements EmitTransaction{
     });
   }
 
+  getTransaction(id: string): Promise<TransactionResponse> {
+    const url = `https://coding-bank.fly.dev/transactions/${id}`;
+    return firstValueFrom(
+      this.http.get<TransactionResponse>(url)
+    ).then(response => {
+      console.log('[TransactionAdapter] réponse API', response);
+      return response;
+    });
+  }
+
 }
 
 //cfa510da-b18e-4391-81ca-f7cfb19697bd

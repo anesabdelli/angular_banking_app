@@ -65,7 +65,7 @@ export class TransactionComponent implements OnInit {
 
       try {
         const transaction = this.transactionModel();
-       
+
 
         if(transaction.emitterAccountId === transaction.receiverAccountId){
           this.transactionError.set(
@@ -80,20 +80,6 @@ export class TransactionComponent implements OnInit {
 
 
         this.transactionResult.set(response);
-
-        // transactions details
-        const detailsTransaction = {
-          amount : response.amount,
-          receiver : getInitials(response.receiver.owner.name),
-          date : response.emittedAt,
-          status : response.status,
-
-        }
-
-        const list = JSON.parse(localStorage.getItem('transactionDetails') ?? '[]');
-        list.push(detailsTransaction);
-        localStorage.setItem('transactionDetails', JSON.stringify(list));
-
 
         setTimeout(() => {
           this.router.navigate(['']);

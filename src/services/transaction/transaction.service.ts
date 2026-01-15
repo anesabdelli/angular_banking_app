@@ -10,4 +10,8 @@ export class TransactionService{
   emitTransaction(data: TransactionDto){
     return this.transactionAdapter.emitTransaction(data)
   }
+
+  getTransactionById(id:string){
+    return this.transactionAdapter.getTransaction(id)
+  }
 }
