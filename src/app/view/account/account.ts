@@ -199,6 +199,7 @@ private loadTransactions(): void {
   }
 
 
+
   onViewAllClick(): void {
      this.loadTransactions();
       // Option : scroll vers la section des transactions
