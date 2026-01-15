@@ -1,5 +1,5 @@
 import { Inject, Injectable } from "@angular/core";
-import { Account, AccountRepository } from "./account.interface";
+import { Account, AccountRepository, CreateAccountDTO } from "./account.interface";
 import { AccountAdapter } from "./account.adapter";
 import { Observable } from "rxjs";
 
@@ -16,5 +16,9 @@ export class AccountService {
 
   getAccounts(): Observable<Account[]> { 
     return this.adapter.getAccounts();
+  }
+
+  createAccount(data: CreateAccountDTO): Observable<Account> {
+    return this.adapter.createAccount(data);
   }
 }   
