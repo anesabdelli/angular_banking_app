@@ -3,6 +3,7 @@ import { form, Field, required, submit } from '@angular/forms/signals';
 import { Router } from '@angular/router';
 import { LoginData } from '../../../services/login/Login.interface';
 import { LoginService } from '../../../services/login/login.service';
+import { getInitials } from '../../../services/user/getInitials';
 
 @Component({
   selector: 'app-login',
@@ -52,8 +53,10 @@ export class LoginComponent {
           password: loginData.password,
         });
 
+        const initialsCurrentUser = getInitials(result.user.name)
+
         const user = {
-          name: result.user.name,
+          name: initialsCurrentUser,
           clientCode: result.user.clientCode
         }
 

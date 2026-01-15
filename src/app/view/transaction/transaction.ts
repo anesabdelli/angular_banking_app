@@ -2,11 +2,14 @@ import { Component, signal, OnInit } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { TransactionService } from '../../../services/transaction/transaction.service';
 import { Field, form, required, submit, min } from '@angular/forms/signals';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import {
   TransactionDto,
   TransactionResponse
 } from '../../../services/transaction/transaction.interface';
+import { AccountService } from '../../../services/account/account.service';
+import { firstValueFrom } from 'rxjs';
+import { getInitials } from '../../../services/user/getInitials';
 
 @Component({
   selector: 'app-transaction',
@@ -22,7 +25,9 @@ export class TransactionComponent implements OnInit {
 
   constructor(
     private transactionService: TransactionService,
-    private route: ActivatedRoute
+    private accountInfo : AccountService,
+    private route: ActivatedRoute,
+    private router: Router
   ) {}
 
   transactionModel = signal<TransactionDto>({
@@ -69,13 +74,34 @@ export class TransactionComponent implements OnInit {
           return;
         }
 
+        const account = await firstValueFrom(this.accountInfo.getAccountById(transaction.emitterAccountId));
+
+
 
         const response = await this.transactionService.emitTransaction(transaction);
         console.log('[TransactionComponent] réponse API', response);
 
         this.transactionResult.set(response);
 
-        localStorage.setItem('send', JSON.stringify(response));
+        // transactions details
+        const detailsTransaction = {
+          amount : response.amount,
+          receiver : getInitials(response.receiver.owner.name),
+          date : response.emittedAt,
+          status : response.status,
+
+        }
+
+        const list = JSON.parse(localStorage.getItem('transactionDetails') ?? '[]');
+        list.push(detailsTransaction);
+        localStorage.setItem('transactionDetails', JSON.stringify(list));
+
+
+
+
+        setTimeout(() => {
+          this.router.navigate(['']);
+        }, 1000);
 
       } catch (error: any) {
         this.transactionError.set(error?.message ?? 'Transaction failed');

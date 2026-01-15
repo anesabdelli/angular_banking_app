@@ -137,7 +137,9 @@ export class AccountComponent implements OnInit {
     })
   }
 
-  onViewAllClick(): void { alert('Voir tous les comptes (non implémenté)'); }
+  onViewAllClick(): void {
+     this.router.navigate(['/transactionslist'])
+   }
 
   onOpenClick(): void {
     this.openCreateForm();
