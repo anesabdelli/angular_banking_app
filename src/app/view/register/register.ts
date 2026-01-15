@@ -10,8 +10,8 @@ import { RegisterService } from '../../../services/register/register.service';
 @Component({
   selector: 'app-register',
   imports: [ReactiveFormsModule, CommonModule],
-  templateUrl: './register.html',
-  styleUrls: ['./register.css']
+  templateUrl: 'register.html',
+  styleUrls: ['register.css']
 })
 
 export class Register {

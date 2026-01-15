@@ -1,0 +1,32 @@
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-12 col-md-6">
+      <div class="card shadow">
+        <div class="card-body">
+          <h2 class="card-title text-center mb-4">Créer un compte</h2>
+
+          <form [formGroup]="form1" (ngSubmit)="onSubmit()">
+            <div class="mb-3">
+              <label class="form-label">Nom</label>
+              <input type="text" class="form-control" formControlName="name">
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label">Mot de passe (6 chiffres)</label>
+              <input type="password" class="form-control" formControlName="password">
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100">Créer mon compte</button>
+          </form>
+
+          @if (clientCode; as clientCode) {
+            <div class="alert alert-success mt-3" role="alert">
+              <strong>Ton code client :</strong> {{ clientCode }}
+              <p class="mb-0 mt-2 small">Redirection dans 6 secondes...</p>
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
