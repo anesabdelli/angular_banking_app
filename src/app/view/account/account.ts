@@ -45,6 +45,9 @@ export class AccountComponent implements OnInit {
   // Countdown : txId → secondes restantes
   countdownMap = signal<Map<string, number>>(new Map());
 
+  // signaux pour gérer l'affichage des infos
+  showAccountInfo = signal(false);
+
   constructor(
     private accountService: AccountService,
     private transactionService: TransactionService,
@@ -234,9 +237,11 @@ export class AccountComponent implements OnInit {
   }
 
   onInfosClick(): void {
-    alert(this.account()
-      ? `Compte ID : ${this.account()!.id}\nSolde : ${this.account()!.balance} €`
-      : 'Aucun compte sélectionné');
+    this.toggleAccountInfo();
+  }
+
+  toggleAccountInfo(): void {
+    this.showAccountInfo.update(val => !val);
   }
 
   onSendClick(): void {

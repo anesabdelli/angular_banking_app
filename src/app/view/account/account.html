@@ -58,8 +58,29 @@
                 <button class="btn btn-outline-primary" (click)="onInfosClick()">Infos</button>
                 <button class="btn btn-primary" (click)="onSendClick()">Envoyer</button>
                 <button class="btn btn-outline-secondary" (click)="onOpenClick()">Ouvrir un nouveau compte</button>
-                <button class="btn btn-outline-info" (click)="onViewAllClick()">Historique transactions</button>
               </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Infos supplémentaires du compte (affiché quand on clique sur Infos) -->
+      <div *ngIf="showAccountInfo() && account()" class="row mb-4">
+        <div class="col-12 col-md-8 offset-md-2">
+          <div class="card shadow border-primary">
+            <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+              <h5 class="mb-0">Informations détaillées</h5>
+              <button type="button" class="btn-close btn-close-white" (click)="toggleAccountInfo()"></button>
+            </div>
+            <div class="card-body">
+              <p><strong>ID du compte :</strong> {{ account()!.id }}</p>
+              <p><strong>Libellé :</strong> {{ account()!.label || '(non défini)' }}</p>
+              <p><strong>Solde actuel :</strong> <span class="fw-bold text-success">{{ account()!.balance | currency:'EUR':'symbol':'1.2-2' }}</span></p>
+              <p><strong>Ouvert le :</strong> {{ account()!.openAt | date:'dd/MM/yyyy à HH:mm' }}</p>
+              <p><strong>Propriétaire :</strong> {{ user?.name || 'Vous' }}</p>
+            </div>
+            <div class="card-footer text-center">
+              <button class="btn btn-outline-primary btn-sm" (click)="toggleAccountInfo()">Fermer</button>
             </div>
           </div>
         </div>
@@ -95,11 +116,21 @@
                         (click)="goToTransactionDetail(tx.id)" style="cursor: pointer;">
                       <td>{{ tx.formattedDate ?? (tx.emittedAt | date:'dd/MM/yyyy HH:mm') }}</td>
                       <td>{{ tx.description || '(sans description)' }}</td>
+
+                      <!-- Montant barré si annulé + statut simple -->
                       <td [class.text-danger]="(tx.displayAmount ?? tx.amount) < 0"
                           [class.text-success]="(tx.displayAmount ?? tx.amount) > 0"
                           class="fw-bold">
-                        {{ (tx.displayAmount ?? tx.amount) | currency:'EUR':'symbol':'1.2-2' }}
+                        <span [class.text-muted]="tx.status === 'cancelled'" 
+                              [class.text-decoration-line-through]="tx.status === 'cancelled'">
+                          {{ (tx.displayAmount ?? tx.amount) | currency:'EUR':'symbol':'1.2-2' }}
+                        </span>
+                        <br>
+                        <small class="text-muted">
+                          {{ tx.status | titlecase }}
+                        </small>
                       </td>
+
                       <td>
                         <span class="badge"
                               [class.bg-danger]="(tx.displayAmount ?? tx.amount) < 0"
@@ -109,7 +140,7 @@
                       </td>
                       <td>{{ tx.otherParty ?? '' }}</td>
 
-                      <!-- Bouton Annuler avec countdown (seulement quand applicable) -->
+                      <!-- Bouton Annuler avec countdown -->
                       <td *ngIf="hasAnyCancellable()">
                         <button 
                           *ngIf="isCancellable(tx)"

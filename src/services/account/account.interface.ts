@@ -24,7 +24,7 @@ export interface FullTransaction {
   id: string;
   amount: number;
   description: string;
-  status: 'pending' | 'success' | 'failed';
+  status: 'pending' | 'success' | 'failed' | 'cancelled';
   emittedAt: string;
   emitter: {
     id: string;
