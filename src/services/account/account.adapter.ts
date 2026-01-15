@@ -10,7 +10,7 @@ export class AccountAdapter implements AccountRepository {
     constructor(private http: HttpClient) {}
 
     getAccountById(accountId: string): Observable<Account> {
-        return this.http.get<Account>(`${this.apiUrl}/${accountId}`);
+      return this.http.get<Account>(`${this.apiUrl}/${accountId}`);
     }
 
     getAccounts(): Observable<Account[]> {
@@ -18,3 +18,4 @@ export class AccountAdapter implements AccountRepository {
     return this.http.get<Account[]>(this.apiUrl);
   }
 }
+

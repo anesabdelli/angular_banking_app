@@ -57,9 +57,10 @@ export class LoginComponent {
           clientCode: result.user.clientCode
         }
 
-        localStorage.setItem('jwt', result.jwt)
 
-        localStorage.setItem('user', JSON.stringify(user));
+        localStorage.setItem('jwt', result.jwt);
+
+        localStorage.setItem('user',JSON.stringify(user));
 
         this.loginSuccess.set(true);
 

@@ -5,8 +5,8 @@ import { User, UserRepository } from './user.interface';
 export class UserAdapter implements UserRepository {
   getCurrentUser(): User | null {
     const userJson = localStorage.getItem('user');
+    console.log('USER FROM STORAGE:', userJson);
     if (!userJson) return null;
-     console.log(userJson);
     return JSON.parse(userJson) as User;
   }
 }
