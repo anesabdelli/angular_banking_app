@@ -26,7 +26,7 @@ export class LoginComponent implements OnInit {
     required(fieldPath.password, { message: 'Mot de passe requis' });
   });
 
-  buttons: string[] = ['0','1','2','3','4','5','6','7','8','9'];
+  buttons: string[] = ['0','1','2','3','4','5','6','7','8','9',' ',' '];
   shuffledButtons: string[] = [];
 
   constructor(private loginService: LoginService, private router: Router) {}

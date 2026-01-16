@@ -72,7 +72,7 @@ export class AccountComponent implements OnInit {
 
       const emitted = new Date(tx.emittedAt).getTime();
       const elapsed = Math.floor((now - emitted) / 1000);
-      const remaining = 8 - elapsed;
+      const remaining = 4 - elapsed;
 
       if (remaining > 0) {
         updated.set(tx.id, remaining);
