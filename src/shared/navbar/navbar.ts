@@ -22,8 +22,7 @@ export class Navbar {
   }
 
   logout() {
-    localStorage.removeItem('user');
-    localStorage.removeItem('jwt');
+    localStorage.clear();
     this.loadUser.set(false);
     this.router.navigate(['/login']);
   }
