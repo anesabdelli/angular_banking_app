@@ -39,6 +39,11 @@ export class AccountComponent implements OnInit {
   // Affichage infos détaillées du compte
   showAccountInfo = signal(false);
 
+  // Feedback "Copié !" pour code client, ID compte et ID transaction
+  copiedClientCode = signal(false);
+  copiedAccountId = signal(false);
+  copiedTxIdMap = signal<Map<string, boolean>>(new Map()); // par txId
+
   // Clé pour stocker le compte sélectionné dans localStorage
   private readonly SELECTED_ACCOUNT_KEY = 'selectedAccountId';
 
@@ -68,7 +73,7 @@ export class AccountComponent implements OnInit {
 
       const emitted = new Date(tx.emittedAt).getTime();
       const elapsed = Math.floor((now - emitted) / 1000);
-      const remaining = 4 - elapsed;
+      const remaining = 8 - elapsed;
 
       if (remaining > 0) {
         updated.set(tx.id, remaining);
@@ -99,6 +104,37 @@ export class AccountComponent implements OnInit {
 
   hasAnyCancellable(): boolean {
     return this.countdownMap().size > 0;
+  }
+
+  // Copier le code client
+  copyClientCode(): void {
+    if (this.user?.clientCode) {
+      navigator.clipboard.writeText(this.user.clientCode);
+      this.copiedClientCode.set(true);
+      setTimeout(() => this.copiedClientCode.set(false), 2000);
+    }
+  }
+
+  // Copier l'ID du compte
+  copyAccountId(): void {
+    if (this.account()?.id) {
+      navigator.clipboard.writeText(this.account()!.id);
+      this.copiedAccountId.set(true);
+      setTimeout(() => this.copiedAccountId.set(false), 2000);
+    }
+  }
+
+  // Copier l'ID d'une transaction spécifique
+  copyTxId(txId: string): void {
+    navigator.clipboard.writeText(txId);
+    const updated = new Map(this.copiedTxIdMap());
+    updated.set(txId, true);
+    this.copiedTxIdMap.set(updated);
+    setTimeout(() => {
+      const newMap = new Map(this.copiedTxIdMap());
+      newMap.delete(txId);
+      this.copiedTxIdMap.set(newMap);
+    }, 2000);
   }
 
   private loadUserAndAccounts(): void {

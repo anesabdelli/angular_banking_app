@@ -1,7 +1,7 @@
 import { Component, OnInit, signal } from '@angular/core';
+import { CommonModule, DatePipe } from '@angular/common';
 import { TransactionService } from '../../../../services/transaction/transaction.service';
 import { TransactionResponse } from '../../../../services/transaction/transaction.interface';
-import { CommonModule, DatePipe } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { getInitials as getInitialsUtils } from '../../../../services/user/getInitials';
 
@@ -13,12 +13,17 @@ import { getInitials as getInitialsUtils } from '../../../../services/user/getIn
   styleUrls: ['./detaisl-transaction.css'],
 })
 export class DetailTransaction implements OnInit {
-
   transaction = signal<TransactionResponse | null>(null);
   loading = signal(false);
   error = signal<string | null>(null);
 
-  constructor(private transactionService: TransactionService, private route: ActivatedRoute) {}
+  // Feedback "Copié !" pour l'ID de la transaction
+  copiedTxId = signal(false);
+
+  constructor(
+    private transactionService: TransactionService,
+    private route: ActivatedRoute
+  ) {}
 
   ngOnInit() {
     const id = this.route.snapshot.paramMap.get('id');
@@ -45,5 +50,14 @@ export class DetailTransaction implements OnInit {
 
   getInitials(name: string): string {
     return getInitialsUtils(name);
+  }
+
+  // Nouvelle méthode : copier l'ID de la transaction
+  copyTxId(): void {
+    if (this.transaction()?.id) {
+      navigator.clipboard.writeText(this.transaction()!.id);
+      this.copiedTxId.set(true);
+      setTimeout(() => this.copiedTxId.set(false), 2000); // disparaît après 2s
+    }
   }
 }

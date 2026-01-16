@@ -9,23 +9,36 @@
 <div *ngIf="transaction()">
   <h3>Détails de la transaction</h3>
 
+  <!-- ID de la transaction + bouton copier -->
+  <p class="d-flex align-items-center">
+    <strong>ID de la transaction :</strong>
+    <span class="ms-2 text-truncate" style="max-width: 350px;">{{ transaction()?.id }}</span>
+    <button 
+      class="btn btn-sm btn-outline-secondary ms-3"
+      (click)="copyTxId()"
+      [class.btn-success]="copiedTxId()"
+      title="Copier l'ID de la transaction">
+      <i class="bi bi-clipboard"></i>
+      {{ copiedTxId() ? 'Copié !' : 'Copier' }}
+    </button>
+  </p>
+
   <p>
     <strong>Montant :</strong>
     {{ transaction()?.amount | currency:'EUR' }}
   </p>
 
-<p>
-  <strong>Émetteur :</strong>
-  <span class="avatar">{{ getInitials(transaction()?.emitter?.owner?.name || '') }}</span>
-  {{ transaction()?.emitter?.owner?.name || '(inconnu)' }}
-</p>
+  <p>
+    <strong>Émetteur :</strong>
+    <span class="avatar">{{ getInitials(transaction()?.emitter?.owner?.name || '') }}</span>
+    {{ transaction()?.emitter?.owner?.name || '(inconnu)' }}
+  </p>
 
-<p>
-  <strong>Bénéficiaire :</strong>
-  <span class="avatar">{{ getInitials(transaction()?.receiver?.owner?.name || '') }}</span>
-  {{ transaction()?.receiver?.owner?.name || '(inconnu)' }}
-</p>
-
+  <p>
+    <strong>Bénéficiaire :</strong>
+    <span class="avatar">{{ getInitials(transaction()?.receiver?.owner?.name || '') }}</span>
+    {{ transaction()?.receiver?.owner?.name || '(inconnu)' }}
+  </p>
 
   <p>
     <strong>Description :</strong>

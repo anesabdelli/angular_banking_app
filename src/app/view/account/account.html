@@ -5,9 +5,20 @@
     <!-- En-tête -->
     <div class="row mb-4">
       <div class="col-12">
-        <h2 class="text-center mb-3">Mon espace compte</h2>
         <div class="alert alert-info text-center" *ngIf="user">
           Bienvenue, <strong>{{ user.name }}</strong>
+        </div>
+        <div class="d-flex align-items-center mb-2">
+          <strong>Code client :</strong>
+          <span class="ms-2">{{ user?.clientCode || 'Non disponible' }}</span>
+          <button 
+            class="btn btn-sm btn-outline-secondary ms-3"
+            (click)="copyClientCode()"
+            [class.btn-success]="copiedClientCode()"
+            title="Copier le code client">
+            <i class="bi bi-clipboard"></i>
+            {{ copiedClientCode() ? 'Copié !' : 'Copier' }}
+          </button>
         </div>
       </div>
     </div>
@@ -52,6 +63,23 @@
             <div class="card-body">
               <h3 class="card-title">{{ account()!.label || 'Compte ' + account()!.id }}</h3>
               <p class="mb-2"><strong>Solde :</strong> <span class="text-success fs-5">{{ account()!.balance | currency:'EUR':'symbol':'1.2-2' }}</span></p>
+
+              <!-- Affichage ID compte avec boutons copier -->
+              <div class="mb-3">
+                <div class="d-flex align-items-center">
+                  <strong>ID du compte :</strong>
+                  <span class="ms-2 text-truncate" style="max-width: 350px;">{{ account()!.id }}</span>
+                  <button 
+                    class="btn btn-sm btn-outline-secondary ms-3"
+                    (click)="copyAccountId()"
+                    [class.btn-success]="copiedAccountId()"
+                    title="Copier l'ID du compte">
+                    <i class="bi bi-clipboard"></i>
+                    {{ copiedAccountId() ? 'Copié !' : 'Copier' }}
+                  </button>
+                </div>
+              </div>
+
 
               <div class="d-grid gap-2">
                 <button class="btn btn-outline-primary" (click)="onInfosClick()">Infos</button>
