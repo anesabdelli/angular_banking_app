@@ -52,7 +52,6 @@
             <div class="card-body">
               <h3 class="card-title">{{ account()!.label || 'Compte ' + account()!.id }}</h3>
               <p class="mb-2"><strong>Solde :</strong> <span class="text-success fs-5">{{ account()!.balance | currency:'EUR':'symbol':'1.2-2' }}</span></p>
-              <p class="mb-3"><strong>Ouvert le :</strong> {{ account()!.openAt | date:'dd/MM/yyyy HH:mm' }}</p>
 
               <div class="d-grid gap-2">
                 <button class="btn btn-outline-primary" (click)="onInfosClick()">Infos</button>

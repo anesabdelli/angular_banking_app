@@ -39,6 +39,9 @@ export class AccountComponent implements OnInit {
   // Affichage infos détaillées du compte
   showAccountInfo = signal(false);
 
+  // Clé pour stocker le compte sélectionné dans localStorage
+  private readonly SELECTED_ACCOUNT_KEY = 'selectedAccountId';
+
   constructor(
     private accountService: AccountService,
     private transactionService: TransactionService,
@@ -65,7 +68,7 @@ export class AccountComponent implements OnInit {
 
       const emitted = new Date(tx.emittedAt).getTime();
       const elapsed = Math.floor((now - emitted) / 1000);
-      const remaining = 8 - elapsed;
+      const remaining = 4 - elapsed;
 
       if (remaining > 0) {
         updated.set(tx.id, remaining);
@@ -76,8 +79,6 @@ export class AccountComponent implements OnInit {
   }
 
   async cancelPendingTransaction(txId: string): Promise<void> {
-    if (!confirm("Voulez-vous vraiment annuler cette transaction ?")) return;
-
     try {
       await firstValueFrom(this.transactionService.cancelTransaction(txId));
       alert("Transaction annulée avec succès !");
@@ -114,10 +115,25 @@ export class AccountComponent implements OnInit {
     this.accountService.getAccounts().subscribe({
       next: (accs: Account[]) => {
         this.accounts.set(accs);
-        if (accs.length > 0) {
-          this.account.set(accs[0]);
+
+        // Récupère l'ID sauvegardé dans localStorage
+        const savedId = localStorage.getItem(this.SELECTED_ACCOUNT_KEY);
+
+        let selected: Account | undefined;
+        if (savedId) {
+          selected = accs.find(acc => acc.id === savedId);
+        }
+
+        // Si pas trouvé ou pas de sauvegarde, prend le premier
+        if (!selected && accs.length > 0) {
+          selected = accs[0];
+        }
+
+        if (selected) {
+          this.account.set(selected);
           this.loadTransactions();
         }
+
         this.loading.set(false);
       },
       error: (err) => {
@@ -184,6 +200,9 @@ export class AccountComponent implements OnInit {
     if (selected) {
       this.account.set(selected);
       this.loadTransactions();
+
+      // Sauvegarde l'ID dans localStorage pour persister après refresh/redirection
+      localStorage.setItem(this.SELECTED_ACCOUNT_KEY, accountId);
     }
   }
 
@@ -211,6 +230,6 @@ export class AccountComponent implements OnInit {
   }
 
   onOpenClick(): void {
-    this.router.navigate(['/create-account']);  // ← Navigation vers la page dédiée
+    this.router.navigate(['/create-account']);
   }
 }
