@@ -28,7 +28,7 @@ export const routes: Routes = [
 
   { path: 'transaction/:id', component: DetailTransaction,
     canActivate: [AuthGuard]
-  }
+  },
   { path: 'create-account', component: CreateAccountComponent }
 
 
