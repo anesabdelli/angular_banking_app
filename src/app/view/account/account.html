@@ -158,37 +158,6 @@
         </div>
       </div>
 
-      <!-- Formulaire création compte -->
-      <div class="row mb-4" *ngIf="showCreateForm()">
-        <div class="col-12 col-md-8 offset-md-2">
-          <div class="card shadow">
-            <div class="card-body">
-              <h3 class="card-title mb-4">Créer un nouveau compte</h3>
-
-              <div class="mb-3">
-                <label for="label" class="form-label">Nom / Libellé :</label>
-                <input id="label" type="text" class="form-control" placeholder="ex: Compte Courant, Livret A, Vacances..." [(ngModel)]="newAccount().label" />
-              </div>
-              <div class="mb-3">
-                <label for="initialBalance" class="form-label">Solde initial (€) :</label>
-                <input id="initialBalance" type="number" class="form-control" min="0" step="0.01" [(ngModel)]="newAccount().initialBalance" />
-              </div>
-
-              <div *ngIf="createError()" class="alert alert-danger mb-3">
-                {{ createError() }}
-              </div>
-
-              <div class="d-grid gap-2">
-                <button class="btn btn-success" (click)="createNewAccount()" [disabled]="createLoading()">
-                  {{ createLoading() ? 'Création en cours...' : 'Créer le compte' }}
-                </button>
-                <button class="btn btn-secondary" (click)="closeCreateForm()" [disabled]="createLoading()">Annuler</button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
     </div> <!-- fin *ngIf comptes -->
 
     <!-- Template aucun compte -->
@@ -198,7 +167,7 @@
           <div class="card shadow text-center">
             <div class="card-body py-5">
               <p>Aucun compte trouvé pour cet utilisateur.</p>
-              <button class="btn btn-primary" (click)="openCreateForm()">Ouvrir un premier compte</button>
+              <button class="btn btn-primary" (click)="onOpenClick()">Ouvrir un premier compte</button>
             </div>
           </div>
         </div>

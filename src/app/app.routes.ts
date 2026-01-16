@@ -6,7 +6,10 @@ import { Register } from './view/register/register';
 
 import { TransactionComponent } from './view/transaction/transaction';
 import { DetailTransaction } from './view/transaction/detaisl-transaction/detaisl-transaction';
+
 import { AuthGuard } from '../services/middlewares/authGuard';
+import { CreateAccountComponent } from './view/account/create-account';
+
 
 
 
@@ -22,8 +25,11 @@ export const routes: Routes = [
     canActivate: [AuthGuard]
   },
   { path: 'register', component: Register },
+
   { path: 'transaction/:id', component: DetailTransaction,
     canActivate: [AuthGuard]
   }
+  { path: 'create-account', component: CreateAccountComponent }
+
 
 ];
