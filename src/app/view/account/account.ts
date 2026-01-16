@@ -39,10 +39,9 @@ export class AccountComponent implements OnInit {
   // Affichage infos détaillées du compte
   showAccountInfo = signal(false);
 
-  // Feedback "Copié !" pour code client, ID compte et ID transaction
+  // Feedback "Copié !" pour code client et ID compte
   copiedClientCode = signal(false);
   copiedAccountId = signal(false);
-  copiedTxIdMap = signal<Map<string, boolean>>(new Map()); // par txId
 
   // Clé pour stocker le compte sélectionné dans localStorage
   private readonly SELECTED_ACCOUNT_KEY = 'selectedAccountId';
@@ -122,19 +121,6 @@ export class AccountComponent implements OnInit {
       this.copiedAccountId.set(true);
       setTimeout(() => this.copiedAccountId.set(false), 2000);
     }
-  }
-
-  // Copier l'ID d'une transaction spécifique
-  copyTxId(txId: string): void {
-    navigator.clipboard.writeText(txId);
-    const updated = new Map(this.copiedTxIdMap());
-    updated.set(txId, true);
-    this.copiedTxIdMap.set(updated);
-    setTimeout(() => {
-      const newMap = new Map(this.copiedTxIdMap());
-      newMap.delete(txId);
-      this.copiedTxIdMap.set(newMap);
-    }, 2000);
   }
 
   private loadUserAndAccounts(): void {
