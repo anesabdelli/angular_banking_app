@@ -1,23 +1,29 @@
-import { Injectable } from "@angular/core";
+import { Injectable, signal } from '@angular/core';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
+  private userLoggedIn = signal<boolean>(false);
 
-  getToken(): string | null {
-    return localStorage.getItem('jwt');
+  constructor() {
+    this.checkLocalStorage();
+  }
+
+  checkLocalStorage() {
+    const user = localStorage.getItem('user');
+    this.userLoggedIn.set(!!user);
   }
 
   isAuthenticated(): boolean {
-    const token = this.getToken();
-    if (!token) return false;
+    return this.userLoggedIn();
+  }
 
-    const payload = JSON.parse(atob(token.split('.')[1]));
-    const isExpired = payload.exp * 1000 < Date.now();
-
-    return !isExpired;
+  login(userData: any) {
+    localStorage.setItem('user', JSON.stringify(userData));
+    this.userLoggedIn.set(true);
   }
 
   logout() {
-    localStorage.removeItem('jwt');
+    localStorage.removeItem('user');
+    this.userLoggedIn.set(false);
   }
 }
