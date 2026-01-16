@@ -1,5 +1,5 @@
 import { Component, signal, OnInit } from '@angular/core';
-import { DatePipe } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { TransactionService } from '../../../services/transaction/transaction.service';
 import { Field, form, required, submit, min } from '@angular/forms/signals';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -8,13 +8,12 @@ import {
   TransactionResponse
 } from '../../../services/transaction/transaction.interface';
 import { AccountService } from '../../../services/account/account.service';
-import { firstValueFrom } from 'rxjs';
-import { getInitials } from '../../../services/user/getInitials';
+
 
 @Component({
   selector: 'app-transaction',
   templateUrl: './transaction.html',
-  imports: [Field, DatePipe],
+  imports: [Field, DatePipe,CommonModule],
   styleUrls: ['./transaction.css'],
 })
 export class TransactionComponent implements OnInit {
@@ -81,9 +80,9 @@ export class TransactionComponent implements OnInit {
 
         this.transactionResult.set(response);
 
-        setTimeout(() => {
-          this.router.navigate(['']);
-        }, 1000);
+
+        this.router.navigate(['account']);
+
 
       } catch (error: any) {
         this.transactionError.set(error?.message ?? 'Transaction failed');

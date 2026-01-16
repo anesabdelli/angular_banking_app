@@ -5,19 +5,21 @@
     <div class="collapse navbar-collapse">
       <ul class="navbar-nav ms-auto">
 
-        @if (loadUser()) {
+        <ng-container *ngIf="loadUser(); else loginLink">
           <li class="nav-item">
             <button class="btn btn-danger" (click)="logout()">
               Se déconnecter
             </button>
           </li>
-        } @else {
+        </ng-container>
+
+        <ng-template #loginLink>
           <li class="nav-item">
             <a class="btn btn-outline-light" routerLink="/login">
               Login
             </a>
           </li>
-        }
+        </ng-template>
 
       </ul>
     </div>

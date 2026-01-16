@@ -60,3 +60,11 @@
 /*    .error{*/
 /*      color: red;*/
 /*    }*/
+
+
+.keyboard button {
+  transition: transform 0.1s;
+}
+.keyboard button:active {
+  transform: scale(0.95);
+}

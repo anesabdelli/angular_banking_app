@@ -1,137 +1,70 @@
-<!--<form (submit)="onSubmit($event)">-->
+<div class="container min-vh-100 d-flex align-items-center justify-content-center">
+  <div class="card shadow w-100" style="max-width: 400px;">
+    <div class="card-body p-4">
+      <h2 class="card-title text-center mb-4">Connexion</h2>
 
-<!--  &lt;!&ndash; Code Client &ndash;&gt;-->
-<!--  <div>-->
-<!--    <label>-->
-<!--      Code Client-->
-<!--      <input type="text" [field]="loginForm.codeClient" aria-invalid="{{ loginForm.codeClient().invalid() }}" />-->
-<!--    </label>-->
-
-<!--    @if (loginForm.codeClient().invalid() && loginForm.codeClient().touched()) {-->
-<!--      <div class="error">-->
-<!--        @for (error of loginForm.codeClient().errors(); track error.kind) {-->
-<!--          <span>{{ error.message }}</span>-->
-<!--        }-->
-<!--      </div>-->
-<!--    }-->
-<!--  </div>-->
-
-<!--  &lt;!&ndash; Password &ndash;&gt;-->
-<!--  <div>-->
-<!--    <label>-->
-<!--      Mot de passe-->
-<!--      <input type="password" [field]="loginForm.password" aria-invalid="{{ loginForm.password().invalid() }}" />-->
-<!--    </label>-->
-
-<!--    @if (loginForm.password().invalid() && loginForm.password().touched()) {-->
-<!--      <div class="error">-->
-<!--        @for (error of loginForm.password().errors(); track error.kind) {-->
-<!--          <span>{{ error.message }}</span>-->
-<!--        }-->
-<!--      </div>-->
-<!--    }-->
-<!--  </div>-->
-
-<!--  &lt;!&ndash; Erreur backend &ndash;&gt;-->
-<!--  @if (loginError()) {-->
-<!--    <p class="error">{{ loginError() }}</p>-->
-<!--  }-->
-
-<!--  &lt;!&ndash; Bouton submit &ndash;&gt;-->
-<!--  <button type="submit" [disabled]="loginForm().invalid() || isLoading()">-->
-<!--    {{ isLoading() ? 'Connexion...' : 'Log in' }}-->
-<!--  </button>-->
-
-<!--  &lt;!&ndash; Message de succès &ndash;&gt;-->
-<!--  @if (loginSuccess()) {-->
-<!--    <p class="success">Connexion réussie !</p>-->
-<!--  }-->
-
-<!--</form>-->
-
-
-<div class="container min-vh-100 d-flex align-items-center">
-  <div class="row justify-content-center w-100">
-    <div class="col-12 col-md-6">
-      <div class="card shadow">
-        <div class="card-body">
-          <h2 class="card-title text-center mb-4">Connexion</h2>
-
-          <form (submit)="onSubmit($event)">
-
-            <!-- Code Client -->
-            <div class="mb-3">
-              <label class="form-label">Code Client</label>
-              <input
-                type="text"
-                class="form-control"
-                [class.is-invalid]="loginForm.codeClient().invalid() && loginForm.codeClient().touched()"
-                [field]="loginForm.codeClient"
-                aria-invalid="{{ loginForm.codeClient().invalid() }}" />
-
-              @if (loginForm.codeClient().invalid() && loginForm.codeClient().touched()) {
-                <div class="invalid-feedback d-block">
-                  @for (error of loginForm.codeClient().errors(); track error.kind) {
-                    <span>{{ error.message }}</span>
-                  }
-                </div>
-              }
-            </div>
-
-            <!-- Password -->
-            <div class="mb-3">
-              <label class="form-label">Mot de passe</label>
-              <input
-                type="password"
-                class="form-control"
-                [class.is-invalid]="loginForm.password().invalid() && loginForm.password().touched()"
-                [field]="loginForm.password"
-                aria-invalid="{{ loginForm.password().invalid() }}" />
-
-              @if (loginForm.password().invalid() && loginForm.password().touched()) {
-                <div class="invalid-feedback d-block">
-                  @for (error of loginForm.password().errors(); track error.kind) {
-                    <span>{{ error.message }}</span>
-                  }
-                </div>
-              }
-            </div>
-
-
-            <!-- Erreur backend -->
-            @if (loginError()) {
-              <div class="alert alert-danger" role="alert">
-                {{ loginError() }}
-              </div>
-            }
-
-            <!-- Bouton submit -->
-            <button
-              type="submit"
-              class="btn btn-primary w-100"
-              [disabled]="loginForm().invalid() || isLoading()">
-              {{ isLoading() ? 'Connexion...' : 'Log in' }}
-            </button>
-
-            <!-- Message de succès -->
-            @if (loginSuccess()) {
-              <div class="alert alert-success mt-3" role="alert">
-                Connexion réussie !
-              </div>
-            }
-
-          </form>
-
-
-          <div class="register"> 
-             <a routerLink="/register" class="btn btn-outline-primary">
-              S’inscrire
-            </a>
-          </div>
-
+      <form (submit)="onSubmit($event)">
+        <!-- Code Client -->
+        <div class="mb-3">
+          <label class="form-label fw-bold">Code Client</label>
+          <input
+            type="text"
+            class="form-control form-control-lg text-center fs-3"
+            style="letter-spacing: 0.5rem;"
+            [class.is-invalid]="loginForm.codeClient().invalid() && loginForm.codeClient().touched()"
+            [value]="loginModel().codeClient"
+            readonly
+            placeholder="______"
+            aria-invalid="{{ loginForm.codeClient().invalid() }}" />
         </div>
-      </div>
+
+        <!-- Mot de passe -->
+        <div class="mb-3">
+          <label class="form-label fw-bold">Mot de passe</label>
+          <input
+            type="text"
+            class="form-control form-control-lg text-center fs-3"
+            style="letter-spacing: 0.5rem;"
+            [class.is-invalid]="loginForm.password().invalid() && loginForm.password().touched()"
+            [value]="loginModel().password"
+            readonly
+            placeholder="______"
+            aria-invalid="{{ loginForm.password().invalid() }}" />
+        </div>
+
+        <!-- Clavier numérique -->
+        <div class="keyboard d-flex flex-wrap gap-2 justify-content-center mb-3">
+          <button *ngFor="let btn of shuffledButtons"
+                  type="button"
+                  class="btn btn-outline-primary btn-lg flex-fill"
+                  style="width: 60px; height: 60px; font-size: 1.5rem;"
+                  (click)="addDigit(btn)">
+            {{ btn }}
+          </button>
+          <button type="button" class="btn btn-outline-danger btn-lg" style="width: 60px; height: 60px;" (click)="clearInput()">✕</button>
+          <button type="button" class="btn btn-outline-secondary btn-lg" style="width: 60px; height: 60px;" (click)="deleteDigit()">←</button>
+        </div>
+
+        <!-- Message d'erreur -->
+        <div *ngIf="loginError()" class="alert alert-danger mb-3">
+          {{ loginError() }}
+        </div>
+
+        <!-- Bouton submit -->
+        <button type="submit"
+                class="btn btn-primary w-100 mb-3"
+                [disabled]="loginForm().invalid() || isLoading()">
+          {{ isLoading() ? 'Connexion...' : 'Se connecter' }}
+        </button>
+
+        <!-- Message succès -->
+        <div *ngIf="loginSuccess()" class="alert alert-success mb-3">
+          Connexion réussie !
+        </div>
+
+        <!-- Lien inscription -->
+        <a routerLink="/register" class="btn btn-outline-primary w-100">S'inscrire</a>
+      </form>
     </div>
   </div>
 </div>
-

@@ -9,11 +9,13 @@ import { DetailTransaction } from './view/transaction/detaisl-transaction/detais
 
 import { AuthGuard } from '../services/middlewares/authGuard';
 import { CreateAccountComponent } from './view/account/create-account';
+import { Home } from './view/home/home';
 
 
 
 
 export const routes: Routes = [
+  {path: '', component: Home},
   { path: 'login', component: LoginComponent},
   { path: 'transaction', component: TransactionComponent,
     canActivate: [AuthGuard]
