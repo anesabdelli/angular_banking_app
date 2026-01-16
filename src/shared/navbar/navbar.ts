@@ -1,31 +1,37 @@
-import { Component, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
-import { CommonModule } from '@angular/common'; // <- ajoute ceci
+import { CommonModule } from '@angular/common';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-navbar',
   standalone: true,
-  imports: [RouterModule, CommonModule], // <- ajoute CommonModule ici
+  imports: [RouterModule, CommonModule],
   templateUrl: './navbar.html',
   styleUrls: ['./navbar.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class Navbar {
-  loadUser = signal<boolean>(false);
+  userLoggedIn = signal<boolean>(false);
 
-  constructor(private router: Router) {
+  constructor(private router: Router
+  ) {
     this.checkSession();
   }
 
+
+
   checkSession() {
     const user = localStorage.getItem('user');
-    this.loadUser.set(!!user);
+    this.userLoggedIn.set(!!user);
   }
 
   logout() {
     localStorage.clear();
-    this.loadUser.set(false);
-    this.router.navigate(['/login']);
+    this.userLoggedIn.set(false);
+    this.router.navigate(['']);
   }
+
 }
 
 

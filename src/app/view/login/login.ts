@@ -103,7 +103,9 @@ clearInput() {
         localStorage.setItem('user', JSON.stringify(result.user));
 
         this.loginSuccess.set(true);
-        this.router.navigate(['/account']);
+        setTimeout(() => {
+          this.router.navigate(['/account']);
+        }, 1000);
       } catch (error) {
         this.loginError.set('Code client ou mot de passe incorrect');
         console.error('Login failed', error);
