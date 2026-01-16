@@ -68,9 +68,9 @@ export class LoginComponent {
 
         this.loginSuccess.set(true);
 
-        setTimeout(() => {
-          this.router.navigate(['/']);
-        }, 1000);
+
+        this.router.navigate(['account']);
+
       } catch (error) {
         this.loginError.set('Code client ou mot de passe incorrect');
         console.error('Login failed', error);
