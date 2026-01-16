@@ -1,15 +1,16 @@
 import { Component, signal, ChangeDetectionStrategy } from '@angular/core';
 import { form, Field, required, submit } from '@angular/forms/signals';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { LoginData } from '../../../services/login/Login.interface';
 import { LoginService } from '../../../services/login/login.service';
 import { getInitials } from '../../../services/user/getInitials';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.html',
   styleUrls: ['./login.css'],
-  imports: [Field],
+  imports: [Field,CommonModule,RouterModule],
   changeDetection: ChangeDetectionStrategy.OnPush,})
 export class LoginComponent {
 
