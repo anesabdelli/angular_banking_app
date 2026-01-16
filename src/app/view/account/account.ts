@@ -28,15 +28,6 @@ export class AccountComponent implements OnInit {
   loading = signal<boolean>(false);
   error = signal<string | null>(null);
 
-  // Création de compte
-  showCreateForm = signal(false);
-  newAccount = signal<{ label: string; initialBalance: number }>({
-    label: '',
-    initialBalance: 0
-  });
-  createLoading = signal(false);
-  createError = signal<string | null>(null);
-
   // Transactions
   transactions = signal<FullTransaction[]>([]);
   transactionsLoading = signal<boolean>(false);
@@ -45,7 +36,7 @@ export class AccountComponent implements OnInit {
   // Countdown : txId → secondes restantes
   countdownMap = signal<Map<string, number>>(new Map());
 
-  // signaux pour gérer l'affichage des infos
+  // Affichage infos détaillées du compte
   showAccountInfo = signal(false);
 
   constructor(
@@ -84,7 +75,6 @@ export class AccountComponent implements OnInit {
     this.countdownMap.set(updated);
   }
 
-  // Annuler une transaction pending
   async cancelPendingTransaction(txId: string): Promise<void> {
     if (!confirm("Voulez-vous vraiment annuler cette transaction ?")) return;
 
@@ -160,8 +150,6 @@ export class AccountComponent implements OnInit {
 
         this.transactions.set(sorted);
         this.transactionsLoading.set(false);
-
-        // Mise à jour immédiate des countdowns après chargement
         this.updateCountdowns();
       },
       error: (err) => {
@@ -172,7 +160,6 @@ export class AccountComponent implements OnInit {
     });
   }
 
-  // Récupère l'autre partie de la transaction (émetteur ou receveur)
   getOtherParty(tx: FullTransaction): string {
     const currentAccountId = this.account()?.id;
     if (tx.emitter.id === currentAccountId) return tx.receiver.owner.name;
@@ -200,42 +187,6 @@ export class AccountComponent implements OnInit {
     }
   }
 
-  async createNewAccount(): Promise<void> {
-    const data = this.newAccount();
-
-    if (!data.label.trim()) {
-      this.createError.set("Le nom du compte est obligatoire");
-      return;
-    }
-    if (data.initialBalance < 0) {
-      this.createError.set("Le solde initial ne peut pas être négatif");
-      return;
-    }
-
-    this.createLoading.set(true);
-    this.createError.set(null);
-
-    try {
-      const created = await this.accountService.createAccount(data).toPromise();
-
-      this.accountService.getAccounts().subscribe({
-        next: (updatedAccounts) => {
-          this.accounts.set(updatedAccounts);
-          if (created) {
-            this.account.set(created);
-            this.loadTransactions();
-          }
-        }
-      });
-
-      this.closeCreateForm();
-    } catch (err: any) {
-      this.createError.set(err?.error?.message || "Erreur lors de la création du compte");
-    } finally {
-      this.createLoading.set(false);
-    }
-  }
-
   onInfosClick(): void {
     this.toggleAccountInfo();
   }
@@ -260,16 +211,6 @@ export class AccountComponent implements OnInit {
   }
 
   onOpenClick(): void {
-    this.openCreateForm();
-  }
-
-  openCreateForm(): void {
-    this.newAccount.set({ label: '', initialBalance: 0 });
-    this.createError.set(null);
-    this.showCreateForm.set(true);
-  }
-
-  closeCreateForm(): void {
-    this.showCreateForm.set(false);
+    this.router.navigate(['/create-account']);  // ← Navigation vers la page dédiée
   }
 }
